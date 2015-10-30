@@ -23,7 +23,7 @@ export default class Calendar {
       auth: this.oauth.client,
       calendarId: 'primary',
       timeMin: (new Date()).toISOString(),
-      maxResults: 10,
+      maxResults: 100,
       singleEvents: true,
       orderBy: 'startTime'
     }).then((res) => {
