@@ -1,0 +1,133 @@
+*, *:after, *:before {
+  box-sizing: border-box;
+}
+
+html {
+  overflow: hidden;
+}
+
+body, html {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  padding: 10px 20px 20px 20px;
+}
+
+#react-root {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  box-shadow: 0px 1px 23px rgba(0,0,0,.2), 0 0 0px 1px rgba(0,0,0,.1);
+  background-color: rgba(250, 250, 250, .98);
+  font-size: 13px;
+  font-family: ".SFNSDisplay-Regular", "Helvetica Neue";
+  color: #444;
+  line-height: 1.4;
+}
+
+#react-root:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #606A6D;
+}
+
+#react-root > .flex-column {
+  height: 100%;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+button, .button {
+  display: inline-block;
+  background: #5CC090;
+  color: #fff;
+  border-radius: 3px;
+  border: 2px solid #5CC090;
+  font-weight: 500;
+  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 6px 12px;
+  transition: all 200ms;
+}
+
+button:hover, .button:hover {
+  box-shadow: 0px 1px 2px rgba(0,0,0,.2);
+}
+
+button:disabled, .button:disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+
+.toolbar {
+  border-radius: 3px 3px 0 0;
+  padding: 8px 16px;
+  background: #606A6D;
+  color: #FFF;
+  line-height: 26px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.content {
+  padding: 16px;
+}
+
+button, .button {
+  outline: none;
+}
+
+.label {
+  float: left;
+  display: inline-block;
+  color: #aaa;
+  line-height: 40px;
+  padding-left: 14px;
+}
+
+.recipients {
+  z-index: 1;
+  display: flex;
+  position: relative;
+  border-bottom: 1px solid #eee;
+}
+
+.margin-0 {
+  margin: 0;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+  position: relative;
+}
