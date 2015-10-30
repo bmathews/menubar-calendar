@@ -19,7 +19,7 @@ var oauth = new OAuth2(Object.assign({}, secrets.oauth, {
   scopes: ["profile", "email", "https://www.googleapis.com/auth/calendar.readonly"]
 }));
 
-// conf.clear();
+conf.clear();
 
 /*
  * Start up the menubar app
