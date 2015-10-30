@@ -28,28 +28,4 @@ export default class Profile {
     });
   }
 
-
-  /*
-   * Fetch contacts from google admin/directory api
-   */
-
-  getContacts () {
-    var queryParams = stringify({
-      access_token: this.oauth.client.credentials.access_token,
-      domain: "wintr.us",
-      viewType: "domain_public"
-    });
-    return fetch(`https://www.googleapis.com/admin/directory/v1/users?${queryParams}`)
-      .then((res) => {
-        return res.json()
-      })
-      .then((data) => {
-        return data.users.map((c) => {
-          return {
-            name: c.name.fullName,
-            email: c.emails.filter(e => e.primary)[0].address
-          };
-        });
-      });
-  }
 }

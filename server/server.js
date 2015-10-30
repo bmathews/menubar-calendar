@@ -3,7 +3,7 @@ var OAuth2 = require('../shared/OAuth2')
 var BrowserWindow = require('browser-window')
 var ipc = require('ipc')
 var Configstore = require('configstore');
-var conf = new Configstore('eod');
+var conf = new Configstore('menu-calendar');
 var path = require('path');
 
 var secrets = require('../secrets.json');
@@ -28,7 +28,9 @@ var oauth = new OAuth2(Object.assign({}, secrets.oauth, {
 var mb = menubar({
   'always-on-top': true,
   'transparent': true,
-  'dir': 'client/'
+  'dir': 'client/',
+  height: 600,
+  width: 400
 });
 
 

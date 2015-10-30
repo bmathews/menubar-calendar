@@ -11,6 +11,8 @@ body, html {
   margin: 0;
   height: 100%;
   width: 100%;
+  -webkit-user-select: none;
+  cursor: default;
 }
 
 body {
@@ -27,6 +29,7 @@ body {
   font-family: ".SFNSDisplay-Regular", "Helvetica Neue";
   color: #444;
   line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
 }
 
 #react-root:before {
@@ -40,7 +43,7 @@ body {
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 8px solid #606A6D;
+  border-bottom: 8px solid #1E88E5;
 }
 
 #react-root > .flex-column {
@@ -82,7 +85,7 @@ button:disabled, .button:disabled {
 .toolbar {
   border-radius: 3px 3px 0 0;
   padding: 8px 16px;
-  background: #606A6D;
+  background: #1E88E5;
   color: #FFF;
   line-height: 26px;
   font-weight: 400;
@@ -106,13 +109,6 @@ button, .button {
   padding-left: 14px;
 }
 
-.recipients {
-  z-index: 1;
-  display: flex;
-  position: relative;
-  border-bottom: 1px solid #eee;
-}
-
 .margin-0 {
   margin: 0;
 }
@@ -130,4 +126,132 @@ button, .button {
 .flex-1 {
   flex: 1;
   position: relative;
+}
+
+.calendar .week {
+  display: flex;
+}
+
+.calendar .week.names {
+  color: #bbb;
+}
+
+.calendar .day {
+  flex: 1;
+  width: 14.28571429%;
+  float: left;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 2px;
+}
+
+.calendar .week:not(.names) .day:not(.today):hover {
+  background-color: rgba(0,0,0,.04);
+}
+
+.calendar .day.different-month {
+  color: #bbb;
+}
+
+.calendar .day.today {
+  color: #1E88E5;
+  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
+}
+
+.calendar .header {
+  background: #1E88E5;
+  color: #fff;
+  padding: 10px 10px 10px 15px;
+  display: flex;
+}
+
+.calendar .header .date {
+  flex: 1;
+}
+
+.calendar .header .month {
+  font-size: 18px;
+  font-weight: 400;
+  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
+  line-height: 40px;
+}
+
+.calendar .header .year {
+  font-size: 18px;
+  font-family: ".SFNSDisplay-Light", "Helvetica Neue";
+  font-weight: 100;
+  color: rgba(255,255,255,.5);
+  padding-left: 4px;
+}
+
+.calendar .header .next {
+  padding: 8px;
+}
+
+.calendar .header .previous {
+  padding: 8px;
+}
+
+.calendar .header .previous:hover,
+.calendar .header .next:hover {
+  border-radius: 2px;
+  background-color: rgba(0,0,0,.04);
+}
+
+.calendar .dots {
+  text-align: center;
+  height: 4px;
+  margin-bottom: -6px;
+  margin-top: 2px;
+}
+
+.calendar .dots .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background: #FF9800;
+  display: inline-block;
+  margin-right: 2px;
+}
+
+.calendar .dots .dot:last-child {
+  margin-right: 0;
+}
+
+.event-list {
+  margin-top: 12px;
+  padding-top: 4px;
+  padding-bottom: 10px;
+  background-color: #263238;
+  color: #fff;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-font-smoothing: initial;
+}
+
+.event-list-header {
+  margin-top: 12px;
+  padding: 4px 17px;
+  color: rgba(255,255,255,.5);
+  font-family: ".SFNSDisplay-Regular", "Helvetica Neue";
+  font-size: 12px;
+}
+
+.event {
+  display: flex;
+}
+
+.event:hover {
+  background-color: rgba(255,255,255,.05);
+}
+
+.event .name, .event .time {
+  flex: 1;
+  padding: 6px 17px;
+}
+
+.event .time {
+  font-size: 12px;
+  text-align: right;
+  color: rgba(255,255,255,.5);
 }

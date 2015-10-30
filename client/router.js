@@ -1,6 +1,6 @@
-import React from 'react'
-import { Router, Route } from 'react-router'
-import App from './app.js'
+import React from 'react/addons';
+import { Router, Route } from 'react-router';
+import App from './app.js';
 
 React.render((
   <Router>

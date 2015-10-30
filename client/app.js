@@ -5,27 +5,32 @@ var secrets = require('../secrets.json');
 
 var Icon = require('./components/icon');
 var Toolbar = require('./components/toolbar');
+var Calendar = require('./components/calendar/calendar');
+var EventList = require('./components/event-list');
 
 var OAuth2 = require('../shared/OAuth2');
 var auth = new OAuth2(secrets.oauth);
 
-var mailer = new (require('../shared/mailer'))();
-var profile = new (require('../shared/profile'))();
-mailer.setAuth(auth);
-profile.setAuth(auth);
+var profile = new(require('../shared/profile'));
+var calendar = new(require('../shared/calendar'));
 
-var google = require('googleapis');
-var Q = require('q');
+profile.setAuth(auth);
+calendar.setAuth(auth);
 
 var Configstore = require('configstore');
-var conf = new Configstore('eod');
+var conf = new Configstore('menu-calendar');
 
-conf.clear();
+var moment = require('moment');
+
+// conf.clear();
 
 export default React.createClass({
 
   getInitialState () {
-    return { sending: false };
+    return {
+      sending: false,
+      month: moment()
+    };
   },
 
   componentDidMount () {
@@ -46,6 +51,7 @@ export default React.createClass({
     if (!err) {
       auth.client.setCredentials(token);
       this._getProfile();
+      this._getEvents();
     } else {
       console.error("auth.change error:" + err);
     }
@@ -65,18 +71,15 @@ export default React.createClass({
     }
   },
 
-
   /*
-   * Send the message
+   * Get the user's events
    */
 
-  async _handleSend (msg) {
+  async _getEvents () {
     try {
-      this.setState({sending: true });
-      await mailer.send(msg);
-      this.setState({sending: false });
+      var events = await calendar.getEvents();
+      this.setState({ events: events });
     } catch (e) {
-      this.setState({sending: false });
       console.error(e, e.stack);
     }
   },
@@ -87,9 +90,11 @@ export default React.createClass({
    */
 
   _renderTools () {
-    if (this.state.profile) {
+    if (this.state.profile && this.state.events) {
       return ([
         <Toolbar key="toolbar" profile={this.state.profile}/>,
+        <Calendar key="calendar" events={this.state.events} month={this.state.month}/>,
+        <EventList key="events" events={this.state.events}/>
       ]);
     } else {
       return (

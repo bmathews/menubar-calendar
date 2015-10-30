@@ -44,6 +44,18 @@ export default React.createClass({
         return (
           <g><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></g>
         );
+      case 'chevron-right':
+        return (
+          <g><path d="M10 6l-1.41 1.41 4.58 4.59-4.58 4.59 1.41 1.41 6-6z"></path></g>
+        );
+      case 'chevron-left':
+        return (
+          <g><path d="M15.41 7.41l-1.41-1.41-6 6 6 6 1.41-1.41-4.58-4.59z"></path></g>
+        );
+      case 'event':
+        return (
+          <g><path d="M17 12h-5v5h5v-5zm-1-11v2h-8v-2h-2v2h-1c-1.11 0-1.99.9-1.99 2l-.01 14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2h-1v-2h-2zm3 18h-14v-11h14v11z"></path></g>
+        );
     }
   },
 
