@@ -1,5 +1,4 @@
 import React from 'react/addons';
-const CSSTransitionGroup = React.addons.CSSTransitionGroup;
 import Week from './week';
 import Icon from '../icon';
 import moment from 'moment';
@@ -8,7 +7,8 @@ export default React.createClass({
 
   propTypes: {
     month: React.PropTypes.object.isRequired,
-    events: React.PropTypes.array.isRequired
+    events: React.PropTypes.array.isRequired,
+    onSelect: React.PropTypes.array
   },
 
   getInitialState () {
@@ -17,21 +17,43 @@ export default React.createClass({
     };
   },
 
-  _previous () {
+
+  /*
+   * Navigate to the previous month
+   */
+
+  _previousMonth () {
     var month = this.state.month;
     month.add(-1, "M");
     this.setState({ month: month });
   },
 
-  _next () {
+
+  /*
+   * Navigate to the next month
+   */
+
+  _nextMonth () {
     var month = this.state.month;
     month.add(1, "M");
     this.setState({ month: month });
   },
 
-  _select (day) {
-    console.log(day);
+
+  /*
+   * Select a day
+   */
+
+  _selectDay (day) {
+    if (this.props.onSelect) {
+      this.props.onSelect();
+    }
   },
+
+
+  /*
+   * Render calendar
+   */
 
   render () {
     return (
@@ -41,14 +63,19 @@ export default React.createClass({
             <span className="month">{ this.state.month.format("MMMM") }</span>
             <span className="year">{ this.state.month.format("YYYY") }</span>
           </span>
-          <span className="previous" onClick={ this._previous }><Icon icon="chevron-left"/></span>
-          <span className="next"onClick={this._next}><Icon icon="chevron-right"/></span>
+          <span className="previous" onClick={ this._previousMonth }><Icon icon="chevron-left"/></span>
+          <span className="next"onClick={this._nextMonth}><Icon icon="chevron-right"/></span>
         </div>
         { this._renderDayNames() }
         { this._renderWeeks() }
       </div>
     );
   },
+
+
+  /*
+   * Render day names
+   */
 
   _renderDayNames () {
     return (
@@ -64,6 +91,11 @@ export default React.createClass({
     );
   },
 
+
+  /*
+   * Render all the weeks
+   */
+
   _renderWeeks () {
     var weeks = [];
     var done = false;
@@ -78,10 +110,8 @@ export default React.createClass({
         return d.isSame(date, "year") && d.isSame(date, "month") && d.isSame(date, "week");
       });
 
-      console.log(eventsThisWeek);
-
       let week = (
-        <Week events={eventsThisWeek} key={ date.toString() } date={ date.clone() } month={ this.state.month } select={ this._select } selected={ this.props.selected } />
+        <Week events={eventsThisWeek} key={ date.toString() } date={ date.clone() } month={ this.state.month } onSelect={ this._selectDay } selected={ this.props.selected } />
       );
 
       weeks.push(week);

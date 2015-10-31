@@ -3,11 +3,19 @@ import moment from 'moment';
 
 export default React.createClass({
 
+
+  propTypes: {
+    date: React.PropTypes.object.isRequired,
+    events: React.PropTypes.array.isRequired,
+    month: React.PropTypes.object.isRequired,
+    onSelect: React.PropTypes.func.isRequired,
+    selected: React.PropTypes.bool
+  },
+
   render () {
     var days = [];
     var date = this.props.date;
     var month = this.props.month;
-    var events = this.props.month;
 
     for (var i = 0; i < 7; i++) {
       var eventsThisDay = this.props.events.filter((e) => {
@@ -34,7 +42,7 @@ export default React.createClass({
         <span
           key={day.date.toString()}
           className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}
-          onClick={this.props.select.bind(null, day)}>
+          onClick={this.props.onSelect.bind(null, day)}>
           {day.number}
           <div className="dots">{dots}</div>
         </span>

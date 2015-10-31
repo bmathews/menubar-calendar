@@ -8,13 +8,6 @@ var path = require('path');
 
 var secrets = require('../secrets.json');
 
-// IDEAS:
-// Always store the composition message in localstorage for incremental use
-// Always store recipients (maybe keep track of them)
-// Snooze button
-// Configure reminder time
-// Simple WYSIWYG formatter (or markdown toggle or both)
-
 var oauth = new OAuth2(Object.assign({}, secrets.oauth, {
   scopes: ["profile", "email", "https://www.googleapis.com/auth/calendar.readonly"]
 }));

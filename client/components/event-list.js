@@ -8,6 +8,11 @@ export default React.createClass({
     events: React.PropTypes.array.isRequired
   },
 
+
+  /*
+   * Group events by date
+   */
+
   _groupEvents () {
     var events = this.props.events;
     return _.groupBy(events, (e) => {
@@ -18,6 +23,11 @@ export default React.createClass({
       });
     });
   },
+
+
+  /*
+   * Render the list of events
+   */
 
   render () {
     var events = this.props.events;
@@ -36,6 +46,11 @@ export default React.createClass({
       <div className="event-list">{ items }</div>
     );
   },
+
+
+  /*
+   * Render the individual event item
+   */
 
   _renderEvent (event, idx) {
     let name = event.summary;
