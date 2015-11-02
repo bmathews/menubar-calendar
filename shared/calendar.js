@@ -18,7 +18,7 @@ export default class Calendar {
    * Use the calendar api to get events
    */
 
-  getEvents(msg) {
+  getEvents() {
     return Q.nfcall(gcal.events.list, {
       auth: this.oauth.client,
       calendarId: 'primary',
