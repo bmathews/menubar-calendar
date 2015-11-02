@@ -20,7 +20,7 @@ var oauth = new OAuth2(Object.assign({}, secrets.oauth, {
 
 var mb = menubar({
   'always-on-top': false,
-  'transparent': false,
+  'transparent': true,
   'dir': 'client/',
   height: 650,
   width: 360
