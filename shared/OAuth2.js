@@ -69,7 +69,7 @@ export default class OAuth2 {
       grant_type: 'refresh_token'
     });
 
-    const res = await fetch('https://www.googleapis.com/o/oauth2/token', {
+    const res = await fetch('https://www.googleapis.com/oauth2/v3/token', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
