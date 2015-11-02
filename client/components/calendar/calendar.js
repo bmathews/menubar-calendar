@@ -8,6 +8,7 @@ export default React.createClass({
   propTypes: {
     month: React.PropTypes.object.isRequired,
     events: React.PropTypes.array.isRequired,
+    highlightWeek: React.PropTypes.bool,
     onSelect: React.PropTypes.array
   },
 
@@ -45,6 +46,10 @@ export default React.createClass({
    */
 
   _selectDay (day) {
+    this.setState({
+      selected: day.date
+    });
+
     if (this.props.onSelect) {
       this.props.onSelect();
     }
@@ -100,24 +105,21 @@ export default React.createClass({
     var weeks = [];
     var done = false;
     var date = this.state.month.clone().startOf("month").add("w" -1).day("Sunday");
-    var monthIndex = date.month();
     var count = 0;
 
-    while (!done) {
-
+    // always render 5 weeks
+    for (count = 0; count < 6; count++) {
       let eventsThisWeek = this.props.events.filter((e) => {
         let d = moment(e.start.dateTime || e.start.date);
         return d.isSame(date, "year") && d.isSame(date, "month") && d.isSame(date, "week");
       });
 
       let week = (
-        <Week events={eventsThisWeek} key={ date.toString() } date={ date.clone() } month={ this.state.month } onSelect={ this._selectDay } selected={ this.props.selected } />
+        <Week events={eventsThisWeek} key={ date.toString() } date={ date.clone() } month={ this.state.month } onSelect={ this._selectDay } highlightWeek={this.props.highlightWeek} selected={ this.state.selected } />
       );
 
       weeks.push(week);
       date.add(1, "w");
-      done = count++ > 2 && monthIndex !== date.month();
-      monthIndex = date.month();
     }
 
     return weeks;

@@ -1,21 +1,25 @@
 import React from 'react/addons';
 import moment from 'moment';
+const PureRenderMixin = React.addons.PureRenderMixin;
 
 export default React.createClass({
 
+  mixins: [PureRenderMixin],
 
   propTypes: {
     date: React.PropTypes.object.isRequired,
     events: React.PropTypes.array.isRequired,
     month: React.PropTypes.object.isRequired,
     onSelect: React.PropTypes.func.isRequired,
-    selected: React.PropTypes.bool
+    selected: React.PropTypes.object,
+    highlightWeek: React.PropTypes.bool
   },
 
   render () {
     var days = [];
     var date = this.props.date;
     var month = this.props.month;
+    var hasSelected = false;
 
     for (var i = 0; i < 7; i++) {
       var eventsThisDay = this.props.events.filter((e) => {
@@ -38,12 +42,22 @@ export default React.createClass({
         );
       }
 
+      var className = "day";
+      var isSelected = day.date.isSame(this.props.selected);
+      className += day.isToday ? " today" : "";
+      className += day.isCurrentMonth ? "" : " different-month";
+      className += isSelected ? " selected" : "";
+
+      if (isSelected) {
+        hasSelected = true;
+      }
+
       var el = (
         <span
           key={day.date.toString()}
-          className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}
+          className={className}
           onClick={this.props.onSelect.bind(null, day)}>
-          {day.number}
+          <span className="number">{day.number}</span>
           <div className="dots">{dots}</div>
         </span>
       );
@@ -53,7 +67,7 @@ export default React.createClass({
     }
 
     return (
-      <div className="week" key={days[0].toString()}>
+      <div className={"week" + (this.props.highlightWeek && hasSelected ? " highlighted" : "")} key={days[0].toString()}>
         {days}
       </div>
     );

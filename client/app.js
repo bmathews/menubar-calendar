@@ -93,7 +93,7 @@ export default React.createClass({
     if (this.state.profile && this.state.events) {
       return ([
         <Toolbar key="toolbar" profile={this.state.profile}/>,
-        <Calendar key="calendar" events={this.state.events} month={this.state.month}/>,
+        <Calendar highlightWeek={true} key="calendar" events={this.state.events} month={this.state.month}/>,
         <EventList key="events" events={this.state.events}/>
       ]);
     } else {

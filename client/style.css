@@ -130,6 +130,30 @@ button, .button {
 
 .calendar .week {
   display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.calendar .week.highlighted .day:after{
+  background-color: rgba(0,0,0,.04);
+  display: block;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  right: 0;
+  bottom: 0;
+  left: 50%;
+}
+
+.calendar .week.highlighted .day:first-child:after {
+  border-radius: 50% 0 0 50%;
+}
+
+.calendar .week.highlighted .day:last-child:after {
+  border-radius: 0 50% 50% 0;
 }
 
 .calendar .week.names {
@@ -139,13 +163,42 @@ button, .button {
 .calendar .day {
   flex: 1;
   width: 14.28571429%;
-  float: left;
   text-align: center;
   padding: 12px 0;
   border-radius: 2px;
+  position: relative;
 }
 
-.calendar .week:not(.names) .day:not(.today):hover {
+.calendar .day .number {
+  position: relative;
+}
+
+.calendar .day:before {
+  display: block;
+  content: "";
+  background-color: transparent;
+  position: absolute;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  right: 0;
+  bottom: 0;
+  left: 50%;
+  border-radius: 50%;
+}
+
+.calendar .day.selected:before {
+  background-color: #FF9800;
+}
+
+.calendar .day.selected {
+  color: #fff;
+  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
+}
+
+.calendar .week:not(.names) .day:not(.today):not(.selected):hover:before {
   background-color: rgba(0,0,0,.04);
 }
 
@@ -154,7 +207,6 @@ button, .button {
 }
 
 .calendar .day.today {
-  color: #1E88E5;
   font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
 }
 
@@ -209,9 +261,10 @@ button, .button {
   width: 4px;
   height: 4px;
   border-radius: 4px;
-  background: #FF9800;
+  background: rgba(0,0,0,.15);
   display: inline-block;
   margin-right: 2px;
+  position: relative;
 }
 
 .calendar .dots .dot:last-child {

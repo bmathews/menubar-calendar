@@ -19,11 +19,11 @@ var oauth = new OAuth2(Object.assign({}, secrets.oauth, {
  */
 
 var mb = menubar({
-  'always-on-top': true,
-  'transparent': true,
+  'always-on-top': false,
+  'transparent': false,
   'dir': 'client/',
-  height: 600,
-  width: 400
+  height: 650,
+  width: 360
 });
 
 
