@@ -1,128 +1,80 @@
-import React from 'react/addons';
-import Week from './week';
+import React from 'react';
+import CSSTransitionGroup from 'react-addons-css-transition-group';
+import Month from './month';
 import Icon from '../icon';
-import moment from 'moment';
+import time from './timeUtils';
 
-export default React.createClass({
+class Calendar extends React.Component {
 
-  propTypes: {
-    month: React.PropTypes.object.isRequired,
-    events: React.PropTypes.array.isRequired,
-    highlightWeek: React.PropTypes.bool,
-    onSelect: React.PropTypes.array
-  },
+  static propTypes = {
+    onChange: React.PropTypes.func,
+    selectedDate: React.PropTypes.object,
+    viewDate: React.PropTypes.object
+  }
 
-  getInitialState () {
-    return {
-      month: this.props.month.clone()
-    };
-  },
+  static defaultProps = {
+    selectedDate: new Date()
+  }
 
+  state = {
+    selectedDate: this.props.selectedDate,
+    viewDate: this.props.selectedDate
+  }
 
-  /*
-   * Navigate to the previous month
-   */
+  handleDayClick = (day) => {
+    this.setState({selectedDate: day});
+    if (this.props.onChange) this.props.onChange(day);
+  }
 
-  _previousMonth () {
-    var month = this.state.month;
-    month.add(-1, "M");
-    this.setState({ month: month });
-  },
-
-
-  /*
-   * Navigate to the next month
-   */
-
-  _nextMonth () {
-    var month = this.state.month;
-    month.add(1, "M");
-    this.setState({ month: month });
-  },
-
-
-  /*
-   * Select a day
-   */
-
-  _selectDay (day) {
+  incrementViewMonth = () => {
     this.setState({
-      selected: day.date
+      direction: 'right',
+      viewDate: time.addMonths(this.state.viewDate, 1)
     });
+  }
 
-    if (this.props.onSelect) {
-      this.props.onSelect();
-    }
-  },
+  decrementViewMonth = () => {
+    this.setState({
+      direction: 'left',
+      viewDate: time.addMonths(this.state.viewDate, -1)
+    });
+  }
 
-
-  /*
-   * Render calendar
-   */
+  renderMonths () {
+    const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
+    return (
+      <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div">
+        <Month
+          key={this.state.viewDate.getMonth()}
+          viewDate={this.state.viewDate}
+          selectedDate={this.state.selectedDate}
+          onDayClick={this.handleDayClick} />
+      </CSSTransitionGroup>
+    );
+  }
 
   render () {
+    const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
     return (
       <div className="calendar">
         <div className="header">
-          <span className="date">
-            <span className="month">{ this.state.month.format("MMMM") }</span>
-            <span className="year">{ this.state.month.format("YYYY") }</span>
-          </span>
-          <span className="previous" onClick={ this._previousMonth }><Icon icon="chevron-left"/></span>
-          <span className="next"onClick={this._nextMonth}><Icon icon="chevron-right"/></span>
+          <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div" className="date">
+            <div key={this.state.viewDate.getMonth()} className="date" >
+              <span className="month">{ time.getFullMonth(this.state.viewDate)}</span>
+              <span className="year">{ this.state.viewDate.getFullYear() }</span>
+            </div>
+          </CSSTransitionGroup>
+          <div className="previous" onMouseDown={this.decrementViewMonth}>
+            <Icon icon="chevron-left"/>
+          </div>
+          <div className="next" onMouseDown={this.incrementViewMonth}>
+            <Icon icon="chevron-right"/>
+          </div>
         </div>
-        { this._renderDayNames() }
-        { this._renderWeeks() }
+        {this.renderMonths()}
       </div>
     );
-  },
-
-
-  /*
-   * Render day names
-   */
-
-  _renderDayNames () {
-    return (
-      <div className="week names">
-        <span className="day">Sun</span>
-        <span className="day">Mon</span>
-        <span className="day">Tue</span>
-        <span className="day">Wed</span>
-        <span className="day">Thu</span>
-        <span className="day">Fri</span>
-        <span className="day">Sat</span>
-      </div>
-    );
-  },
-
-
-  /*
-   * Render all the weeks
-   */
-
-  _renderWeeks () {
-    var weeks = [];
-    var done = false;
-    var date = this.state.month.clone().startOf("month").add("w" -1).day("Sunday");
-    var count = 0;
-
-    // always render 5 weeks
-    for (count = 0; count < 6; count++) {
-      let eventsThisWeek = this.props.events.filter((e) => {
-        let d = moment(e.start.dateTime || e.start.date);
-        return d.isSame(date, "year") && d.isSame(date, "month") && d.isSame(date, "week");
-      });
-
-      let week = (
-        <Week events={eventsThisWeek} key={ date.toString() } date={ date.clone() } month={ this.state.month } onSelect={ this._selectDay } highlightWeek={this.props.highlightWeek} selected={ this.state.selected } />
-      );
-
-      weeks.push(week);
-      date.add(1, "w");
-    }
-
-    return weeks;
   }
+}
 
-});
+export default Calendar;

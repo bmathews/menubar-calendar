@@ -8,7 +8,8 @@
   </body>
   <script>
     require('babel/register')({
-      sourceMaps: 'inline'
+      sourceMaps: 'inline',
+      optional: ["es7.classProperties"]
     });
     require('./router.js')
   </script>

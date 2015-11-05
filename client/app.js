@@ -84,6 +84,10 @@ export default React.createClass({
     }
   },
 
+  onCalendarSelect (date) {
+    var el = this.refs.eventlist;
+    el.scrollToDate(date);
+  },
 
   /*
    * Render the tools based on whether we have the contacts/profile yet.
@@ -93,8 +97,8 @@ export default React.createClass({
     if (this.state.profile && this.state.events) {
       return ([
         <Toolbar key="toolbar" profile={this.state.profile}/>,
-        <Calendar highlightWeek={true} key="calendar" events={this.state.events} month={this.state.month}/>,
-        <EventList key="events" events={this.state.events}/>
+        <Calendar key="calendar" selectedDate={new Date()} onChange={this.onCalendarSelect}/>,
+        <EventList ref="eventlist" key="events" events={this.state.events}/>
       ]);
     } else {
       return (

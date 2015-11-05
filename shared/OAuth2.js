@@ -53,7 +53,7 @@ export default class OAuth2 {
     this.token.created = new Date().getTime();
     this.token.expires_at = this.token.created + resp.expires_in * 1000;
     this.client.setCredentials(this.token);
-    return resp;
+    return this.token;
   }
 
 
@@ -86,7 +86,7 @@ export default class OAuth2 {
     this.token.created = new Date().getTime();
     this.token.expires_at = this.token.created + resp.expires_in * 1000;
     this.client.setCredentials(this.token);
-    return resp;
+    return this.token;
   }
 
 

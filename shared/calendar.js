@@ -19,15 +19,31 @@ export default class Calendar {
    */
 
   getEvents() {
+    var d = new Date();
+
     return Q.nfcall(gcal.events.list, {
       auth: this.oauth.client,
       calendarId: 'primary',
-      timeMin: (new Date()).toISOString(),
+      timeMin: d.toISOString(),
       maxResults: 100,
       singleEvents: true,
       orderBy: 'startTime'
     }).then((res) => {
       return res[0].items;
+    }, (err) => {
+      console.error(err);
     });
   }
 }
+
+/*
+  CalendarStore.js extends EventEmitter
+    Stores/fetches from localstorage
+    Emits when updated
+    Client listens to CalendarStore for updates
+  CalendarSync.js
+    Performs full sync, stores syncToken itself
+    Updates CalendarStore
+  Client
+    Listen to and fetch from CalendarStore.js
+*/
