@@ -40,6 +40,20 @@ class Calendar extends React.Component {
     });
   }
 
+  resetDate = () => {
+    var d = new Date();
+
+    var direction = d.getTime() < this.state.viewDate.getTime() ? 'left' : 'right';
+
+    this.setState({
+      selectedDate: d,
+      viewDate: d,
+      direction: direction
+    });
+
+    if (this.props.onChange) this.props.onChange(d);
+  }
+
   renderMonths () {
     const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
     return (
@@ -59,7 +73,7 @@ class Calendar extends React.Component {
       <div className="calendar">
         <div className="header">
           <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div" className="date">
-            <div key={this.state.viewDate.getMonth()} className="date" >
+            <div onClick={this.resetDate} key={this.state.viewDate.getMonth()} className="date" >
               <span className="month">{ time.getFullMonth(this.state.viewDate)}</span>
               <span className="year">{ this.state.viewDate.getFullYear() }</span>
             </div>
