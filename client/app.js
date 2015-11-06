@@ -17,6 +17,9 @@ var calendar = new(require('../shared/calendar'));
 profile.setAuth(auth);
 calendar.setAuth(auth);
 
+var CalendarStore = require('../shared/CalendarStore');
+var store = new CalendarStore();
+
 var Configstore = require('configstore');
 var conf = new Configstore('menu-calendar');
 
@@ -77,8 +80,17 @@ export default React.createClass({
 
   async _getEvents () {
     try {
-      var events = await calendar.getEvents();
-      this.setState({ events: events });
+      var today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      var later = new Date();
+      later.setDate(later.getDate() + 50);
+      later.setHours(23);
+      later.setMinutes(59);
+      await calendar.syncEvents();
+      var all = await store.getAll(today.toISOString(), later.toISOString());
+      var mapped = all.rows.map(e => e.doc);
+      this.setState({ events: mapped});
     } catch (e) {
       console.error(e, e.stack);
     }
@@ -97,7 +109,7 @@ export default React.createClass({
     if (this.state.profile && this.state.events) {
       return ([
         <Toolbar key="toolbar" profile={this.state.profile}/>,
-        <Calendar key="calendar" selectedDate={new Date()} onChange={this.onCalendarSelect}/>,
+        <Calendar key="calendar" events={this.state.events} selectedDate={new Date()} onChange={this.onCalendarSelect}/>,
         <EventList ref="eventlist" key="events" events={this.state.events}/>
       ]);
     } else {

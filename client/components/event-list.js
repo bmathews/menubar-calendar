@@ -27,6 +27,8 @@ export default React.createClass({
     var events = this.props.events;
     return _.groupBy(events, (e) => {
       return moment(e.start.dateTime || e.start.date).calendar(null, {
+          lastDay: 'dddd MM/DD/YY',
+          lastWeek: 'dddd MM/DD/YY',
           sameDay: '[Today] MM/DD/YY',
           nextDay: '[Tomorrow] MM/DD/YY',
           nextWeek: 'dddd MM/DD/YY'
@@ -41,6 +43,8 @@ export default React.createClass({
     }
 
     var group = moment(date).calendar(null, {
+        lastDay: 'dddd MM/DD/YY',
+        lastWeek: 'dddd MM/DD/YY',
         sameDay: '[Today] MM/DD/YY',
         nextDay: '[Tomorrow] MM/DD/YY',
         nextWeek: 'dddd MM/DD/YY'
@@ -123,7 +127,12 @@ export default React.createClass({
 
     return (
       <div key={idx} className={"event" + (isPast ? ' past' : '') + (isCurrent ? ' current' : '')}>
-        <div className="name">{name}</div>
+        <div className="name">
+          {name}
+          <div className="location">
+            {event.location}
+          </div>
+        </div>
         <div className="time">{timeRange}</div>
       </div>
     );

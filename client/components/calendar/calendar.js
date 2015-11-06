@@ -9,7 +9,8 @@ class Calendar extends React.Component {
   static propTypes = {
     onChange: React.PropTypes.func,
     selectedDate: React.PropTypes.object,
-    viewDate: React.PropTypes.object
+    viewDate: React.PropTypes.object,
+    events: React.PropTypes.array
   }
 
   static defaultProps = {
@@ -54,13 +55,26 @@ class Calendar extends React.Component {
     if (this.props.onChange) this.props.onChange(d);
   }
 
+  getEventsThisMonth () {
+    var events = this.props.events;
+    var viewDate = this.state.viewDate;
+    var forThisMonth = events.filter((e) => {
+      var d = new Date(e.start.dateTime);
+      return d.getFullYear() == viewDate.getFullYear() && d.getMonth() == viewDate.getMonth();
+    });
+
+    return forThisMonth;
+  }
+
   renderMonths () {
     const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
+    var events = this.getEventsThisMonth();
     return (
       <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div">
         <Month
           key={this.state.viewDate.getMonth()}
           viewDate={this.state.viewDate}
+          events={events}
           selectedDate={this.state.selectedDate}
           onDayClick={this.handleDayClick} />
       </CSSTransitionGroup>

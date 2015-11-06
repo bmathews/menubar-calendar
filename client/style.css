@@ -129,7 +129,7 @@ button, .button {
 }
 
 .calendar {
-  height: 360px;
+  height: 330px;
   position: relative;
   overflow: hidden;
 }
@@ -162,11 +162,12 @@ button, .button {
   width: calc(100% / 7);
   border-radius: 2px;
   position: relative;
-  height: 45px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: color 125ms ease-in-out;
+  flex-direction: column;
 }
 
 .calendar .day > span {
@@ -179,8 +180,8 @@ button, .button {
   background-color: transparent;
   position: absolute;
   position: absolute;
-  width: 75%;
-  height: 75%;
+  width: 35px;
+  height: 35px;
   top: 50%;
   right: 0;
   bottom: 0;
@@ -284,8 +285,6 @@ button, .button {
 .calendar .dots {
   text-align: center;
   height: 4px;
-  margin-bottom: -6px;
-  margin-top: 2px;
 }
 
 .calendar .dots .dot {
@@ -368,6 +367,20 @@ button, .button {
 
 .event .name {
   flex: 1;
+  align-items: center;
+}
+
+.event .name > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+
+}
+
+.event .location {
+  color: rgba(255,255,255,.3);
+  font-size: 12px;
 }
 
 .event.past .name {

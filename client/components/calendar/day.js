@@ -7,7 +7,8 @@ class Day extends React.Component {
     onClick: React.PropTypes.func,
     selectedDate: React.PropTypes.object,
     isDifferentMonth: React.PropTypes.bool,
-    viewDate: React.PropTypes.object
+    viewDate: React.PropTypes.object,
+    events: React.PropTypes.array
   }
 
   isSelected () {
@@ -23,6 +24,11 @@ class Day extends React.Component {
       <div onClick={this.props.onClick} className={className}>
         <span>
           {this.props.day}
+        </span>
+        <span className="dots">
+          {this.props.events.map((e, i) => {
+            return <span key={i} className="dot"></span>
+          })}
         </span>
       </div>
     );
