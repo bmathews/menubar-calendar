@@ -1,3 +1,4 @@
 node_modules
 secrets.json
 npm-debug.log
+events.db

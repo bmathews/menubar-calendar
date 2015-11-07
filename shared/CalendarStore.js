@@ -1,46 +1,47 @@
-var EventEmitter = require('events');
+var Q = require('q');
+var LinvoDB = require("linvodb3");
+LinvoDB.dbPath = process.cwd();
 
-var PouchDB = require('pouchdb');
-var adapters = require('pouchdb/lib/adapters-browser');
+var Events = new LinvoDB("events", {});
 
-Object.keys(adapters).forEach(function (adapterName) {
-  PouchDB.adapter(adapterName, adapters[adapterName], true);
-});
+class CalendarStore {
 
-var db = new PouchDB('menu-calendar', { adapter: 'websql' });
+  /*
+   * Save or update items
+   */
 
-// db.destroy().then(function (res) {
-//   console.log(res);
-//   db = new PouchDB('menu-calendar', { adapter: 'websql' });
-// }, function (err) {
-//   console.error(err);
-// });
-
-class CalendarStore extends EventEmitter {
-
-  setItems (list) {
-    // clone items and set _id and _rev props
-    var items = list.map((i) => {
+  setItems (items) {
+    var list = items.map((i) => {
       var copy = Object.assign({}, i);
       var id = copy.id;
-      copy._id = i.start.dateTime + "/" + id;
-      copy._rev = i.updated || i.created;
+      copy._id = id;
       return copy;
     });
 
-    console.log("Saving all items: ", items);
-    return db.bulkDocs(items);
+    console.log("Saving all items: ", list);
+    return Q.ninvoke(Events, "save", list);
   }
+
+
+  /*
+   * Remove items
+   */
+
+  removeItems (items) {
+    var ids = items.map((i) => {
+      return i.id;
+    });
+    console.log("Removing items: ", ids);
+    return Q.ninvoke(Events, "remove", { _id: { $in: ids } }, { multi: true });
+  }
+
+  /*
+   * Get all items between start/end time range
+   */
 
   getAll (start, end) {
-    console.log("Getting all items");
-    return db.allDocs({
-      include_docs: true,
-      startkey: start,
-      endkey: end
-    });
+    return Q.ninvoke(Events, "find", {'start.dateTime': { $gte: start, $lte: end }});
   }
-
 }
 
-export default CalendarStore
+export default CalendarStore;

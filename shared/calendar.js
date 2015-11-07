@@ -39,6 +39,7 @@ export default class Calendar {
       auth: this.oauth.client,
       calendarId: 'primary',
       maxResults: 100,
+      timeZone: 'GMT',
       singleEvents: true
     };
 
@@ -46,11 +47,14 @@ export default class Calendar {
     if (nextSyncToken) {
       queryOpts.syncToken = nextSyncToken;
     } else if (!nextPageToken) {
-      var yearAgo = new Date();
-      yearAgo.setFullYear(yearAgo.getFullYear() - 1);
-      queryOpts.timeMin = yearAgo.toISOString();
-      yearAgo.setFullYear(yearAgo.getFullYear() + 1);
-      queryOpts.timeMax = yearAgo.toISOString();
+      var today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      var later = new Date(today);
+      later.setDate(later.getDate() + 100);
+      queryOpts.timeMin = today.toISOString();
+      queryOpts.timeMax = later.toISOString();
     }
 
     if (nextPageToken) {
@@ -72,10 +76,25 @@ export default class Calendar {
 
           console.log("Done syncing...")
 
+          var remove = [];
+          var save = [];
+
+          obj.items.forEach(function (i) {
+            if (i.status == 'cancelled') {
+              remove.push(i);
+            } else {
+              save.push(i);
+            }
+          });
+
           // save the items and return
-          return store.setItems(obj.items)
+          return store.setItems(save)
           .then((resp) => {
-            return resp;
+            if (remove.length) {
+              return store.removeItems(remove);
+            } else {
+              return;
+            }
           });
 
         } else if (obj.nextPageToken) {

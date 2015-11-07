@@ -89,8 +89,7 @@ export default React.createClass({
       later.setMinutes(59);
       await calendar.syncEvents();
       var all = await store.getAll(today.toISOString(), later.toISOString());
-      var mapped = all.rows.map(e => e.doc);
-      this.setState({ events: mapped});
+      this.setState({ events: all});
     } catch (e) {
       console.error(e, e.stack);
     }
