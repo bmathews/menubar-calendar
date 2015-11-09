@@ -22,10 +22,10 @@ var mb = menubar({
   'always-on-top': true,
   'transparent': true,
   'dir': 'client/',
+  preloadWindow: true,
   height: 650,
   width: 360
 });
-
 
 /*
  * Gets the auth token, via either:
@@ -52,6 +52,32 @@ var getToken = async function () {
 };
 
 
+
+/*
+ * Start syncing
+ */
+
+var start = async function () {
+  try {
+    var token = await getToken();
+    console.log("Token: ", token);
+    oauth.client.setCredentials(token);
+
+    var sync = new (require('./sync'))();
+    sync.setAuth(oauth);
+    sync.start();
+
+    sync.on('update', function (events) {
+      if (mb.window) {
+        mb.window.webContents.send('events.synced', events);
+      }
+    });
+  } catch (e) {
+    console.error(e, e.stack);
+  }
+};
+
+
 /*
  * Listen for 'auth.get' requests and fetch token.
  * Emit an 'auth.change' event.
@@ -71,7 +97,7 @@ ipc.on('auth.get', async function (event) {
  * Open dev tools after window is shown
  */
 
-mb.on('after-create-window', function () {
+mb.on('after-show', function () {
   mb.window.openDevTools({ detach: true })
 });
 
@@ -81,5 +107,5 @@ mb.on('after-create-window', function () {
  */
 
 mb.on('ready', function () {
-  console.log("App ready!")
+  start();
 });

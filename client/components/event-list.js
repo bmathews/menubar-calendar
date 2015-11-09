@@ -37,6 +37,10 @@ export default React.createClass({
   },
 
 
+  /*
+   * Scroll to a date
+   */
+
   scrollToDate(date) {
     if (this.state.animationFrame) {
       cancelAnimationFrame(this.state.animationFrame);

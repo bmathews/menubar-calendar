@@ -2,13 +2,10 @@ var Q = require('q');
 var google = require('googleapis');
 var gcal = google.calendar('v3');
 
-var CalendarStore = require('./CalendarStore');
-var store = new CalendarStore();
-
 var Configstore = require('configstore');
 var conf = new Configstore('menu-calendar');
 
-// conf.set('sync-tokens', {});
+var store = new (require('./CalendarStore'))();
 
 export default class Calendar {
 
@@ -29,6 +26,8 @@ export default class Calendar {
    */
 
   syncEvents () {
+
+    console.log("Calendar: syncing")
 
     // fetch any sync tokens we have from storage
     var syncTokens = conf.get('sync-tokens') || {};
@@ -64,6 +63,8 @@ export default class Calendar {
     // perform the request
     return Q.nfcall(gcal.events.list, queryOpts)
       .then((res) => {
+
+        console.log("Calendar: list response")
 
         var obj = res[0];
 
@@ -113,27 +114,5 @@ export default class Calendar {
         }
 
       });
-  }
-
-
-  /*
-   * Grab a simple list of events
-   */
-
-  getEvents() {
-    var d = new Date();
-    return Q.nfcall(gcal.events.list, {
-      auth: this.oauth.client,
-      calendarId: 'primary',
-      timeMin: d.toISOString(),
-      maxResults: 100,
-      singleEvents: true,
-      orderBy: 'startTime'
-    }).then((res) => {
-      console.log(res);
-      return res[0].items;
-    }, (err) => {
-      console.error(err);
-    });
   }
 }

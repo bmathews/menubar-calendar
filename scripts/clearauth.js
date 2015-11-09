@@ -1,3 +1,3 @@
 var Configstore = require('configstore');
 var conf = new Configstore('menu-calendar');
-conf.set('auth', {});
+conf.set('auth', null);
