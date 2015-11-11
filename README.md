@@ -1,6 +1,8 @@
-Electron powered menubar calendar app
+<p align="center">
+<img src="https://cloud.githubusercontent.com/assets/848347/11104047/423d395c-887b-11e5-8622-129ff63e4565.gif">
+</p>
 
-![image](https://cloud.githubusercontent.com/assets/848347/10860519/98fc04fc-7f26-11e5-9629-8195ff8115eb.png)
+### Electron powered menubar calendar app
 
 ### Install
 ```
