@@ -27,6 +27,7 @@
     "electron-rebuild": "^1.0.2"
   },
   "scripts": {
+    "postinstall": "npm run rebuild",
     "start": "./node_modules/.bin/electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild",
     "test": "echo \"Error: no test specified\" && exit 1"
