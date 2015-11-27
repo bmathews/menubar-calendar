@@ -5,8 +5,10 @@
 ### Electron powered menubar calendar app
 
 ### Install
+
+With npm and node (v4.2.1+) installed, do:
+
 ```
 $ npm install
-$ npm install electron-prebuilt -g
-$ electron .
+$ npm start
 ```
