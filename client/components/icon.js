@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 
 /* Subset of the SVG icon collection from the Polymer project (goo.gl/N7SB5G) */
 

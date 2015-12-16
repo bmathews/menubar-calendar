@@ -1,14 +1,15 @@
-var menubar = require('menubar')
-var OAuth2 = require('../shared/OAuth2')
-var BrowserWindow = require('browser-window')
-var ipc = require('ipc')
-var Configstore = require('configstore');
-var conf = new Configstore('menu-calendar');
-var path = require('path');
+import menubar from 'menubar'
+import BrowserWindow from 'browser-window'
+import ipc from 'ipc'
 
-var secrets = require('../secrets.json');
+import Configstore from 'configstore'
+import secrets from '../secrets.json'
 
-var oauth = new OAuth2(Object.assign({}, secrets.oauth, {
+const conf = new Configstore('menu-calendar');
+
+import ElectronGoogleAuth from '../shared/ElectronGoogleAuth'
+
+var oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
   scopes: ["profile", "email", "https://www.googleapis.com/auth/calendar.readonly"]
 }));
 
@@ -26,6 +27,7 @@ var mb = menubar({
   height: 650,
   width: 360
 });
+
 
 /*
  * Gets the auth token, via either:
@@ -52,7 +54,6 @@ var getToken = async function () {
 };
 
 
-
 /*
  * Start syncing
  */
@@ -60,7 +61,6 @@ var getToken = async function () {
 var start = async function () {
   try {
     var token = await getToken();
-    console.log("Token: ", token);
     oauth.client.setCredentials(token);
 
     var sync = new (require('./sync'))();

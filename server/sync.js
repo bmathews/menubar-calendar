@@ -1,7 +1,10 @@
-var api = new (require('./CalendarAPI'))();
-var store = new (require('./CalendarStore'))();
-var ipc = require('ipc');
-var EventEmitter = require('events')
+import CalendarAPI from '../shared/CalendarAPI'
+import CalendarStore from './CalendarStore'
+const api = new CalendarAPI()
+const store = new CalendarStore()
+
+import ipc from 'ipc';
+import EventEmitter from 'events'
 
 export default class extends EventEmitter {
 
@@ -11,23 +14,27 @@ export default class extends EventEmitter {
 
   async update () {
     try {
-      console.log("Sync: Update");
-      await api.syncEvents();
-      console.log("Sync: Synced");
+      console.log("Sync: #update: Starting");
 
-      var today = new Date();
-      today.setHours(0);
-      today.setMinutes(0);
-      var later = new Date();
-      later.setDate(later.getDate() + 50);
-      later.setHours(23);
-      later.setMinutes(59);
+      let results = await api.syncEvents();
+      await store.removeItems(results.remove)
+      await store.setItems(results.save)
 
-      console.log("Sync: Getting all");
+      console.log("Sync: #update: Synced and updated store");
 
-      var events = await store.getAll(today.toISOString(), later.toISOString());
+      var start = new Date();
+      start.setHours(0);
+      start.setMinutes(0);
+      var end = new Date();
+      end.setDate(end.getDate() + 50);
+      end.setHours(23);
+      end.setMinutes(59);
 
-      console.log("Sync: Update done, firing update:", events.length);
+      console.log("Sync: #update: Now pulling all from store");
+
+      var events = await store.getAll(start.toISOString(), end.toISOString());
+
+      console.log("Sync: #update: Update done, firing update:", events.length);
 
       this.emit('update', events);
 
@@ -35,18 +42,19 @@ export default class extends EventEmitter {
       console.error(e, e.stack);
     }
 
+    this.timeout = setTimeout(this.update.bind(this), 1000 * 30);
+
   }
 
   start () {
-    if (this.interval) this.stop();
+    if (this.timeout) this.stop();
 
-    console.log("Sync: Start");
+    console.log("Sync: #start: Start");
 
-    this.interval = setInterval(this.update.bind(this), 1000 * 30);
     this.update();
   }
 
   stop () {
-    clearInterval(this.interval);
+    clearTimeout(this.timeout);
   }
 }

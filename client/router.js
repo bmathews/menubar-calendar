@@ -1,8 +1,9 @@
-import React from 'react/addons';
+import React from 'react';
+import { render } from 'react-dom'
 import { Router, Route } from 'react-router';
 import App from './app.js';
 
-React.render((
+render((
   <Router>
     <Route path="/" component={App}>
     </Route>

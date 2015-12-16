@@ -1,6 +1,6 @@
 var ipc = require('ipc');
 
-var React = require('react/addons');
+var React = require('react');
 var Icon = require('./components/icon');
 var Toolbar = require('./components/toolbar');
 var Calendar = require('./components/calendar/calendar');

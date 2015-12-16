@@ -18,7 +18,7 @@ class CalendarStore {
       return copy;
     });
 
-    console.log("Saving all items: ", list);
+    console.log("CalendarStore: #setItems: Saving all items: ", list.length);
     return Q.ninvoke(Events, "save", list);
   }
 
@@ -31,7 +31,7 @@ class CalendarStore {
     var ids = items.map((i) => {
       return i.id;
     });
-    console.log("Removing items: ", ids);
+    console.log("CalendarStore: #removeItems: Removing items: ", ids.length);
     return Q.ninvoke(Events, "remove", { _id: { $in: ids } }, { multi: true });
   }
 

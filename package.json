@@ -24,7 +24,8 @@
   },
   "devDependencies": {
     "electron-prebuilt": "^0.34.2",
-    "electron-rebuild": "^1.0.2"
+    "electron-rebuild": "^1.0.2",
+    "rimraf": "^2.4.4"
   },
   "scripts": {
     "postinstall": "npm run rebuild",

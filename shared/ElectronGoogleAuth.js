@@ -5,8 +5,7 @@ import { stringify } from 'querystring';
 import fetch from 'node-fetch';
 const GoogleOAuth2 = google.auth.OAuth2;
 
-export default class OAuth2 {
-
+export default class Auth {
 
   /*
    * Construct a new Google OAuth2 instance.
@@ -29,6 +28,8 @@ export default class OAuth2 {
    */
 
   async auth (BrowserWindow) {
+    console.log("ElectronGoogleAuth: #auth: Getting auth")
+
     const authorizationCode = await this._getAuthorizationCode(BrowserWindow);
 
     const data = stringify({
@@ -62,6 +63,9 @@ export default class OAuth2 {
    */
 
   async refresh (token) {
+
+    console.log("ElectronGoogleAuth: #refresh: Refreshing auth")
+
     const data = stringify({
       refresh_token: token ? token.refresh_token : this.token.refresh_token,
       client_id: this.opts.clientId,
