@@ -1,9 +1,11 @@
-import CalendarAPI from '../shared/CalendarAPI'
+import CalendarAPI from './api/CalendarAPI'
 import CalendarStore from './CalendarStore'
 const api = new CalendarAPI()
 const store = new CalendarStore()
 
-import ipc from 'ipc';
+import Configstore from 'configstore'
+const conf = new Configstore('menu-calendar');
+
 import EventEmitter from 'events'
 
 export default class extends EventEmitter {
@@ -16,9 +18,12 @@ export default class extends EventEmitter {
     try {
       console.log("Sync: #update: Starting");
 
-      let results = await api.syncEvents();
-      await store.removeItems(results.remove)
-      await store.setItems(results.save)
+      let { syncTokens, items } = await api.syncEvents(conf.get('syncTokens') || {});
+      conf.set('syncTokens', syncTokens)
+
+      await store.removeItems(items.remove)
+      await store.setItems(items.save)
+
 
       console.log("Sync: #update: Synced and updated store");
 

@@ -2,19 +2,18 @@ import Q from 'q'
 import google from 'googleapis'
 const gcal = google.calendar('v3');
 
-import Configstore from 'configstore'
-const conf = new Configstore('menu-calendar');
-
 export default class CalendarAPI {
 
   static get DAYS_TO_SYNC() { return 10 }
   static get MAX_RESULTS() { return 1000 }
+
 
   /*
    * Store the auth client to use with api calls
    */
 
   setAuth(oauth) {
+    console.log(oauth)
     this.oauth = oauth;
   }
 
@@ -58,11 +57,10 @@ export default class CalendarAPI {
     return opts;
   }
 
-  async syncEvents(collector={ save: [], remove: [] }) {
+  async syncEvents(syncTokens, collector={ save: [], remove: [] }) {
 
     console.log("CalendarAPI: #syncEvents: Starting sync")
 
-    let syncTokens = conf.get('sync-tokens') || {};
     var queryOpts = this._getQueryOptions(syncTokens)
 
     let resp = await Q.nfcall(gcal.events.list, queryOpts)
@@ -85,8 +83,7 @@ export default class CalendarAPI {
     if (data.nextPageToken) {
       console.log("CalendarAPI: #syncEvents: Fetching next page");
       syncTokens.nextPageToken = data.nextPageToken;
-      conf.set('sync-tokens', syncTokens);
-      return await this.syncEvents(collector);
+      return await this.syncEvents(syncTokens, collector);
     }
 
     // Finished, so return collector
@@ -94,8 +91,10 @@ export default class CalendarAPI {
       console.log("CalendarAPI: #syncEvents: Finished syncing");
       syncTokens.nextSyncToken = data.nextSyncToken;
       delete syncTokens.nextPageToken;
-      conf.set('sync-tokens', syncTokens);
-      return collector;
+      return {
+        syncTokens,
+        items: collector
+      }
     }
   }
 }

@@ -1,13 +1,13 @@
 import menubar from 'menubar'
-import BrowserWindow from 'browser-window'
-import ipc from 'ipc'
+import { BrowserWindow, ipcMain as ipc } from 'electron'
 
 import Configstore from 'configstore'
 import secrets from '../secrets.json'
+import SyncService from './SyncService'
 
 const conf = new Configstore('menu-calendar');
 
-import ElectronGoogleAuth from '../shared/ElectronGoogleAuth'
+import ElectronGoogleAuth from './ElectronGoogleAuth'
 
 var oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
   scopes: ["profile", "email", "https://www.googleapis.com/auth/calendar.readonly"]
@@ -31,21 +31,14 @@ var mb = menubar({
 
 /*
  * Gets the auth token, via either:
- *   An existing, unexpired token
- *   an expired token, which will then be refreshed
+ *   An existing token from the conf
  *   A new token from a new oauth browser window
  */
 
 var getToken = async function () {
   var token = conf.get('auth');
   if (token) {
-    if (token.expires_at < new Date().getTime()) {
-      var result = await oauth.refresh(token)
-      conf.set("auth", result);
-      return result;
-    } else {
-      return token;
-    }
+    return token;
   }
 
   var result = await oauth.auth(BrowserWindow)
@@ -63,7 +56,7 @@ var start = async function () {
     var token = await getToken();
     oauth.client.setCredentials(token);
 
-    var sync = new (require('./sync'))();
+    let sync = new SyncService();
     sync.setAuth(oauth);
     sync.start();
 

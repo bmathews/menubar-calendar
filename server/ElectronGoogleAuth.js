@@ -1,5 +1,4 @@
 // Adapted from https://github.com/parro-it/electron-google-oauth
-
 import google from 'googleapis';
 import { stringify } from 'querystring';
 import fetch from 'node-fetch';
@@ -32,65 +31,12 @@ export default class Auth {
 
     const authorizationCode = await this._getAuthorizationCode(BrowserWindow);
 
-    const data = stringify({
-      code: authorizationCode,
-      client_id: this.opts.clientId,
-      client_secret: this.opts.clientSecret,
-      grant_type: 'authorization_code',
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob'
-    });
-
-    const res = await fetch('https://accounts.google.com/o/oauth2/token', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: data
-    });
-
-    const resp = await res.json();
-    this.token = resp;
-    this.token.created = new Date().getTime();
-    this.token.expires_at = this.token.created + resp.expires_in * 1000;
-    this.client.setCredentials(this.token);
-    return this.token;
-  }
-
-
-  /*
-   * Refresh the token
-   */
-
-  async refresh (token) {
-
-    console.log("ElectronGoogleAuth: #refresh: Refreshing auth")
-
-    const data = stringify({
-      refresh_token: token ? token.refresh_token : this.token.refresh_token,
-      client_id: this.opts.clientId,
-      client_secret: this.opts.clientSecret,
-      grant_type: 'refresh_token'
-    });
-
-    const res = await fetch('https://www.googleapis.com/oauth2/v3/token', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: data
-    });
-
-    const resp = await res.json();
-    this.token = token;
-    this.token.access_token = resp.access_token;
-    this.token.expires_in = resp.expires_in;
-    this.token.token_type = resp.token_type;
-    this.token.created = new Date().getTime();
-    this.token.expires_at = this.token.created + resp.expires_in * 1000;
-    this.client.setCredentials(this.token);
-    return this.token;
+    return new Promise((resolve, reject) => {
+      return this.client.getToken(authorizationCode, (err, tokens) => {
+        this.client.setCredentials(tokens)
+        resolve(tokens)
+      })
+    })
   }
 
 

@@ -1,4 +1,4 @@
-var ipc = require('ipc');
+import { ipcRenderer as ipc } from 'electron'
 
 var React = require('react');
 var Icon = require('./components/icon');
@@ -20,7 +20,7 @@ export default React.createClass({
     ipc.off('events.synced', this._updateEvents);
   },
 
-  _updateEvents (events) {
+  _updateEvents (sender, events) {
     this.setState({ events: events});
   },
 
