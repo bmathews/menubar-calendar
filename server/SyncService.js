@@ -58,13 +58,8 @@ export default class extends EventEmitter {
     start.setMinutes(0);
     var end = new Date();
     end.setDate(end.getDate() + 30);
-
-    console.log("Sync: #update: Now pulling all from store");
-
+    
     var events = await store.getByDate(start.toISOString(), end.toISOString());
-
-    console.log("Sync: #update: Update done, firing update:", events.length);
-
     this.emit('update', events);
 
     console.log("Sync: #start: Start");

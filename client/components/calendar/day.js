@@ -36,7 +36,8 @@ class Day extends React.Component {
 
   render () {
     const className = 'day'
-      + (this.isSelected() ? ' selected' : '') + (this.props.isDifferentMonth ? ' different-month' : '')
+      + (this.isSelected() ? ' selected' : '')
+      + (this.props.isDifferentMonth ? ' different-month' : '')
       + (this.props.day < this.props.viewDate.getDate() ? ' past' : '')
     return (
       <div onClick={this.props.onClick} className={className}>

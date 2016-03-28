@@ -385,6 +385,11 @@ button, .button {
 .event .location {
   color: rgba(255,255,255,.3);
   font-size: 12px;
+  margin-top: 3px;
+}
+
+.event .location:empty {
+  display: none;
 }
 
 .event.past .name {
