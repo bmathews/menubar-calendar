@@ -87,7 +87,7 @@ class Calendar extends React.Component {
       <div className="calendar">
         <div className="header">
           <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div" className="date">
-            <div onClick={this.resetDate} key={this.state.viewDate.getMonth()} className="date" >
+            <div onClick={this.resetDate.bind(this)} key={this.state.viewDate.getMonth()} className="date" >
               <span className="month">{ time.getFullMonth(this.state.viewDate)}</span>
               <span className="year">{ this.state.viewDate.getFullYear() }</span>
             </div>
