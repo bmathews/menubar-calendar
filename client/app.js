@@ -9,7 +9,7 @@ var EventList = require('./components/event-list');
 export default React.createClass({
 
   getInitialState () {
-    return {};
+    return { events: [], view: 'full' };
   },
 
   componentDidMount () {
@@ -36,32 +36,15 @@ export default React.createClass({
 
 
   /*
-   * Render the tools based on whether we have the contacts/profile yet.
-   */
-
-  _renderTools () {
-    if (this.state.events) {
-      return ([
-        <Toolbar key="toolbar" profile={this.state.profile}/>,
-        <Calendar key="calendar" events={this.state.events} selectedDate={new Date()} onChange={this._handleCalendarSelect}/>,
-        <EventList ref="eventlist" key="events" events={this.state.events}/>
-      ]);
-    } else {
-      return (
-        <div style={{display: 'flex', flex: '1', alignItems: 'center', justifyContent: 'center'}}><span>Authenticating...</span></div>
-      );
-    }
-  },
-
-
-  /*
    * Render
    */
 
   render () {
     return (
       <div className="flex-column">
-        {this._renderTools()}
+        <Toolbar key="toolbar" profile={this.state.profile}/>
+        <Calendar key="calendar" view={this.state.view} events={this.state.events} selectedDate={new Date()} onChange={this._handleCalendarSelect}/>
+        <EventList ref="eventlist" key="events" events={this.state.events}/>
       </div>
     );
   }

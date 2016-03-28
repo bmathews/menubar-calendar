@@ -8,7 +8,7 @@ export default React.createClass({
     events: React.PropTypes.array.isRequired
   },
 
-  getInitialState () {
+  getInitialState() {
     return {}
   },
 
@@ -94,29 +94,6 @@ export default React.createClass({
 
 
   /*
-   * Render the list of events
-   */
-
-  render () {
-    var events = this.props.events;
-    let groups = this._groupEvents();
-    var items = _.map(groups, (subItems, key) => {
-      var header = (
-        <div ref={key} className="event-list-header">{key}</div>
-      );
-      var els = subItems.map((e, i) => {
-        return this._renderEvent(e, i);
-      });
-      return [header].concat(els);
-    })
-
-    return (
-      <div className="event-list">{ items }</div>
-    );
-  },
-
-
-  /*
    * Render the individual event item
    */
 
@@ -140,5 +117,29 @@ export default React.createClass({
         <div className="time">{timeRange}</div>
       </div>
     );
+  },
+
+
+  /*
+   * Render the list of events
+   */
+
+  render () {
+    var events = this.props.events;
+    let groups = this._groupEvents();
+    var items = _.map(groups, (subItems, key) => {
+      var header = (
+        <div ref={key} className="event-list-header">{key}</div>
+      );
+      var els = subItems.map((e, i) => {
+        return this._renderEvent(e, i);
+      });
+      return [header].concat(els);
+    })
+
+    return (
+      <div className="event-list">{ items }</div>
+    );
   }
+
 });

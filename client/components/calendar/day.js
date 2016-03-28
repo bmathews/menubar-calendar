@@ -11,6 +11,10 @@ class Day extends React.Component {
     events: React.PropTypes.array
   }
 
+  componentWilLReceiveProps (nextProps) {
+
+  }
+
   isSelected () {
     const sameYear = this.props.viewDate.getFullYear() === this.props.selectedDate.getFullYear();
     const sameMonth = this.props.viewDate.getMonth() === this.props.selectedDate.getMonth();
@@ -18,17 +22,30 @@ class Day extends React.Component {
     return sameYear && sameMonth && sameDay && !this.props.isDifferentMonth;
   }
 
+  _renderEventIndicator () {
+    if (this.props.events.length) {
+      const eventHours = this.props.events.reduce((total, e) => {
+        return total + new Date(e.end.dateTime).getTime() - new Date(e.start.dateTime).getTime();
+      }, 0) / 1000 / 60 / 60
+      const width = Math.min(eventHours / 8, 100)
+      return (
+        <span className="dot" style={{width: width * 100 + "%"}}></span>
+      )
+    }
+  }
+
   render () {
-    const className = 'day' + (this.isSelected() ? ' selected' : '') + (this.props.isDifferentMonth ? ' different-month' : '');
+    const className = 'day'
+      + (this.isSelected() ? ' selected' : '') + (this.props.isDifferentMonth ? ' different-month' : '')
+      + (this.props.day < this.props.viewDate.getDate() ? ' past' : '')
     return (
       <div onClick={this.props.onClick} className={className}>
+        <div className="day-tooltip"></div>
         <span>
           {this.props.day}
         </span>
         <span className="dots">
-          {this.props.events.map((e, i) => {
-            return <span key={i} className="dot"></span>
-          })}
+          {this._renderEventIndicator()}
         </span>
       </div>
     );

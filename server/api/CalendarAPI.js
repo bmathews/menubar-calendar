@@ -13,7 +13,6 @@ export default class CalendarAPI {
    */
 
   setAuth(oauth) {
-    console.log(oauth)
     this.oauth = oauth;
   }
 

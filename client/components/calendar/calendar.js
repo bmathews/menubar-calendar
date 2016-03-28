@@ -22,26 +22,26 @@ class Calendar extends React.Component {
     viewDate: this.props.selectedDate
   }
 
-  handleDayClick = (day) => {
+  handleDayClick (day) {
     this.setState({selectedDate: day});
     if (this.props.onChange) this.props.onChange(day);
   }
 
-  incrementViewMonth = () => {
+  incrementViewMonth () {
     this.setState({
       direction: 'right',
       viewDate: time.addMonths(this.state.viewDate, 1)
     });
   }
 
-  decrementViewMonth = () => {
+  decrementViewMonth () {
     this.setState({
       direction: 'left',
       viewDate: time.addMonths(this.state.viewDate, -1)
     });
   }
 
-  resetDate = () => {
+  resetDate () {
     var d = new Date();
 
     var direction = d.getTime() < this.state.viewDate.getTime() ? 'left' : 'right';
@@ -66,7 +66,7 @@ class Calendar extends React.Component {
     return forThisMonth;
   }
 
-  renderMonths () {
+  _renderMonths () {
     const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
     var events = this.getEventsThisMonth();
     return (
@@ -76,7 +76,7 @@ class Calendar extends React.Component {
           viewDate={this.state.viewDate}
           events={events}
           selectedDate={this.state.selectedDate}
-          onDayClick={this.handleDayClick} />
+          onDayClick={this.handleDayClick.bind(this)} />
       </CSSTransitionGroup>
     );
   }
@@ -92,14 +92,14 @@ class Calendar extends React.Component {
               <span className="year">{ this.state.viewDate.getFullYear() }</span>
             </div>
           </CSSTransitionGroup>
-          <div className="previous" onMouseDown={this.decrementViewMonth}>
+          <div className="previous" onMouseDown={this.decrementViewMonth.bind(this)}>
             <Icon icon="chevron-left"/>
           </div>
-          <div className="next" onMouseDown={this.incrementViewMonth}>
+          <div className="next" onMouseDown={this.incrementViewMonth.bind(this)}>
             <Icon icon="chevron-right"/>
           </div>
         </div>
-        {this.renderMonths()}
+        {this._renderMonths()}
       </div>
     );
   }

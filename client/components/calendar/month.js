@@ -10,7 +10,7 @@ class Month extends React.Component {
     events: React.PropTypes.array
   };
 
-  handleDayClick = (day) => {
+  handleDayClick (day) {
     if (this.props.onDayClick) this.props.onDayClick(day);
   };
 

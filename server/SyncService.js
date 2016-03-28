@@ -24,20 +24,18 @@ export default class extends EventEmitter {
       await store.removeItems(items.remove)
       await store.setItems(items.save)
 
-
       console.log("Sync: #update: Synced and updated store");
 
       var start = new Date();
+      start.setDate(start.getDate() - 30);
       start.setHours(0);
       start.setMinutes(0);
       var end = new Date();
-      end.setDate(end.getDate() + 50);
-      end.setHours(23);
-      end.setMinutes(59);
+      end.setDate(end.getDate() + 30);
 
       console.log("Sync: #update: Now pulling all from store");
 
-      var events = await store.getAll(start.toISOString(), end.toISOString());
+      var events = await store.getByDate(start.toISOString(), end.toISOString());
 
       console.log("Sync: #update: Update done, firing update:", events.length);
 
@@ -51,8 +49,23 @@ export default class extends EventEmitter {
 
   }
 
-  start () {
+  async start () {
     if (this.timeout) this.stop();
+
+    var start = new Date();
+    start.setDate(start.getDate() - 30);
+    start.setHours(0);
+    start.setMinutes(0);
+    var end = new Date();
+    end.setDate(end.getDate() + 30);
+
+    console.log("Sync: #update: Now pulling all from store");
+
+    var events = await store.getByDate(start.toISOString(), end.toISOString());
+
+    console.log("Sync: #update: Update done, firing update:", events.length);
+
+    this.emit('update', events);
 
     console.log("Sync: #start: Start");
 

@@ -25,7 +25,7 @@ var mb = menubar({
   'dir': 'client/',
   preloadWindow: true,
   height: 650,
-  width: 360
+  width: 320
 });
 
 

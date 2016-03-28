@@ -35,12 +35,31 @@ class CalendarStore {
     return Q.ninvoke(Events, "remove", { _id: { $in: ids } }, { multi: true });
   }
 
+
   /*
    * Get all items between start/end time range
    */
 
-  getAll (start, end) {
-    return Q.ninvoke(Events, "find", {'start.dateTime': { $gte: start, $lte: end }});
+  getByDate (start, end) {
+    return new Promise((resolve, reject) => {
+      Events.find({'start.dateTime': { $gte: start, $lte: end }}).sort({ 'start.dateTime': 1 }).exec((err, res) => {
+        if (err) return reject(err)
+        return resolve(res)
+      })
+    })
+  }
+
+
+  /*
+   * Get all items
+   */
+  getAll () {
+    return new Promise((resolve, reject) => {
+      Events.find({}).sort({ 'start.dateTime': 1 }).exec((err, res) => {
+        if (err) return reject(err)
+        return resolve(res)
+      })
+    })
   }
 }
 
