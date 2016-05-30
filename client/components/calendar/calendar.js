@@ -22,11 +22,6 @@ class Calendar extends React.Component {
     viewDate: this.props.selectedDate
   }
 
-  handleDayClick (day) {
-    this.setState({selectedDate: day});
-    if (this.props.onChange) this.props.onChange(day);
-  }
-
   incrementViewMonth () {
     this.setState({
       direction: 'right',
@@ -41,15 +36,13 @@ class Calendar extends React.Component {
     });
   }
 
-  resetDate () {
-    var d = new Date();
-
-    var direction = d.getTime() < this.state.viewDate.getTime() ? 'left' : 'right';
+  changeDate (d = new Date()) {
+    const direction = d.getTime() < this.state.viewDate.getTime() ? 'left' : 'right';
 
     this.setState({
       selectedDate: d,
       viewDate: d,
-      direction: direction
+      direction
     });
 
     if (this.props.onChange) this.props.onChange(d);
@@ -76,7 +69,7 @@ class Calendar extends React.Component {
           viewDate={this.state.viewDate}
           events={events}
           selectedDate={this.state.selectedDate}
-          onDayClick={this.handleDayClick.bind(this)} />
+          onDayClick={this.changeDate.bind(this)} />
       </CSSTransitionGroup>
     );
   }
@@ -87,7 +80,7 @@ class Calendar extends React.Component {
       <div className="calendar">
         <div className="header">
           <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div" className="date">
-            <div onClick={this.resetDate.bind(this)} key={this.state.viewDate.getMonth()} className="date" >
+            <div onClick={this.changeDate.bind(this)} key={this.state.viewDate.getMonth()} className="date" >
               <span className="month">{ time.getFullMonth(this.state.viewDate)}</span>
               <span className="year">{ this.state.viewDate.getFullYear() }</span>
             </div>
