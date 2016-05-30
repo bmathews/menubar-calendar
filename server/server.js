@@ -86,13 +86,15 @@ ipc.on('auth.get', async function (event) {
 });
 
 
-/*
- * Open dev tools after window is shown
- */
+if (process.env.NODE_ENV === 'development') { 
+  /*
+  * Open dev tools after window is shown
+  */
 
-mb.on('after-show', function () {
-  mb.window.openDevTools({ detach: true })
-});
+  mb.on('after-show', function () {
+    mb.window.openDevTools({ detach: true })
+  });
+}
 
 
 /*
