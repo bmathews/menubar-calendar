@@ -96,6 +96,16 @@ mb.on('after-show', function () {
 
 
 /*
+ * Notify app when shown
+ */
+ mb.on('after-show', function () {
+   if (mb.window) {
+     mb.window.webContents.send('app.after-show');
+   }
+ });
+
+
+/*
  * Log when the app is ready.
  */
 
