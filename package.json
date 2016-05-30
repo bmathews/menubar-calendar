@@ -27,6 +27,7 @@
     "rimraf": "^2.4.4"
   },
   "scripts": {
+    "dev": "NODE_ENV=development npm start",
     "start": "./node_modules/.bin/electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
