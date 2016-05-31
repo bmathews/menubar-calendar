@@ -22,12 +22,14 @@ class Calendar extends React.Component {
     viewDate: this.props.selectedDate
   }
 
-  incrementViewMonth () {
-    this.changeDate(time.addMonths(this.state.viewDate, 1))
-  }
-
-  decrementViewMonth () {
-    this.changeDate(time.addMonths(this.state.viewDate, -1))
+  navigateMonth (amount) {
+    const now = new Date();
+    const next = time.addMonths(this.state.viewDate, amount)
+    if (next.getMonth() == now.getMonth()) {
+      this.changeDate(now)
+    } else {
+      this.changeDate(next);
+    }
   }
 
   changeDate (d = new Date()) {
@@ -79,10 +81,10 @@ class Calendar extends React.Component {
               <span className="year">{ this.state.viewDate.getFullYear() }</span>
             </div>
           </CSSTransitionGroup>
-          <div className="previous" onMouseDown={this.decrementViewMonth.bind(this)}>
+          <div className="previous" onMouseDown={this.navigateMonth.bind(this, -1)}>
             <Icon icon="chevron-left"/>
           </div>
-          <div className="next" onMouseDown={this.incrementViewMonth.bind(this)}>
+          <div className="next" onMouseDown={this.navigateMonth.bind(this, 1)}>
             <Icon icon="chevron-right"/>
           </div>
         </div>
