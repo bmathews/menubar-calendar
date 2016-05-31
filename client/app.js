@@ -27,7 +27,7 @@ export default React.createClass({
   },
 
   _resetDate () {
-    this.refs.calendar.resetDate();
+    this.refs.calendar.changeDate();
   },
 
 
