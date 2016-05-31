@@ -40,7 +40,7 @@ class Day extends React.Component {
       + (this.props.isDifferentMonth ? ' different-month' : '')
       + (this.props.day < this.props.viewDate.getDate() ? ' past' : '')
     return (
-      <div onClick={this.props.onClick} className={className}>
+      <div onMouseDown={this.props.onClick} className={className}>
         <div className="day-tooltip"></div>
         <span>
           {this.props.day}
