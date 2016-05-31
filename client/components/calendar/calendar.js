@@ -23,17 +23,11 @@ class Calendar extends React.Component {
   }
 
   incrementViewMonth () {
-    this.setState({
-      direction: 'right',
-      viewDate: time.addMonths(this.state.viewDate, 1)
-    });
+    this.changeDate(time.addMonths(this.state.viewDate, 1))
   }
 
   decrementViewMonth () {
-    this.setState({
-      direction: 'left',
-      viewDate: time.addMonths(this.state.viewDate, -1)
-    });
+    this.changeDate(time.addMonths(this.state.viewDate, -1))
   }
 
   changeDate (d = new Date()) {
