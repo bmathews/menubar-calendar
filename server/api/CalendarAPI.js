@@ -4,7 +4,7 @@ const gcal = google.calendar('v3');
 
 export default class CalendarAPI {
 
-  static get DAYS_TO_SYNC() { return 10 }
+  static get DAYS_TO_SYNC() { return 30 }
   static get MAX_RESULTS() { return 1000 }
 
 
