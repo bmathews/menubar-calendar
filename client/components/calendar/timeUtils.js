@@ -105,6 +105,7 @@ module.exports = {
 
   addMonths (d, months) {
     const newDate = this.clone(d);
+    newDate.setDate(1);
     newDate.setMonth(d.getMonth() + months);
     return newDate;
   },
@@ -159,13 +160,13 @@ module.exports = {
 
     if (format === 'ampm') {
       const isAM = hours < 12;
-      const additional = isAM ? ' am' : ' pm';
+      const additional = isAM ? ' AM' : ' PM';
 
       hours = hours % 12;
       hours = (hours || 12).toString();
       if (mins.length < 2) mins = '0' + mins;
 
-      return hours + (mins === '00' ? '' : ':' + mins) + additional;
+      return hours + ':' + mins + additional;
     }
 
     hours = hours.toString();
