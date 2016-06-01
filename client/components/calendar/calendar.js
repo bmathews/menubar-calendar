@@ -32,7 +32,7 @@ class Calendar extends React.Component {
     }
   }
 
-  changeDate (d = new Date()) {
+  changeDate (d = new Date(), silent = false) {
     const direction = d.getTime() < this.state.viewDate.getTime() ? 'left' : 'right';
 
     this.setState({
@@ -41,7 +41,7 @@ class Calendar extends React.Component {
       direction
     });
 
-    if (this.props.onChange) this.props.onChange(d);
+    if (this.props.onChange && !silent) this.props.onChange(d);
   }
 
   getEventsThisMonth () {

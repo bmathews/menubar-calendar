@@ -8,11 +8,11 @@ class Month extends React.Component {
     selectedDate: React.PropTypes.object,
     viewDate: React.PropTypes.object,
     events: React.PropTypes.array
-  };
+  }
 
   handleDayClick (day) {
     if (this.props.onDayClick) this.props.onDayClick(day);
-  };
+  }
 
   renderWeeks () {
     var weeks = [];

@@ -1,4 +1,3 @@
-import { shell } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import time from './calendar/timeUtils';
@@ -110,6 +109,29 @@ export default React.createClass({
 
 
   /*
+   *  Handle when an event is clicked on
+   */
+
+  _handleEventClick (event) {
+    if (this.props.onEventClick) {
+      this.props.onEventClick(event);
+    }
+  },
+
+
+  /*
+   * Handle when a group header is clicked on
+   */
+
+  _handleHeaderClick (group) {
+    if (this.props.onHeaderClick) {
+      const d = new Date(group.substr(group.indexOf(' ') + 1));
+      this.props.onHeaderClick(d);
+    }
+  },
+
+
+  /*
    * Render the individual event item
    */
 
@@ -123,7 +145,7 @@ export default React.createClass({
     var isCurrent = now >= start && now <= end;
 
     return (
-      <div key={idx} onClick={shell.openExternal.bind(null, event.htmlLink)} className={"event" + (isPast ? ' past' : '') + (isCurrent ? ' current' : '')}>
+      <div key={idx} onMouseDown={this._handleEventClick.bind(this, event)} className={"event" + (isPast ? ' past' : '') + (isCurrent ? ' current' : '')}>
         <div className="name">
           {name}
           <div className="location">
@@ -143,7 +165,7 @@ export default React.createClass({
   render () {
     var items = _.map(this.state.groupedEvents, (subItems, key) => {
       var header = (
-        <div ref={key} className="event-list-header">{key}</div>
+        <div ref={key} className="event-list-header" onMouseDown={this._handleHeaderClick.bind(this, key)}>{key}</div>
       );
       var els = subItems.map((e, i) => {
         return this._renderEvent(e, i);
