@@ -1,4 +1,7 @@
-import { ipcRenderer as ipc } from 'electron'
+import {
+  ipcRenderer as ipc,
+  shell
+} from 'electron'
 
 var React = require('react');
 var Icon = require('./components/icon');
@@ -42,6 +45,25 @@ export default React.createClass({
 
 
   /*
+   * When a header is clicked, select the date
+   */
+
+  _handleHeaderClick (date) {
+    this.refs.calendar.changeDate(date, true);
+  },
+
+
+  /*
+   * When an event is clicked, open in browser
+   */
+
+  _handleEventClick (event) {
+    this.refs.calendar.changeDate(new Date(event.start.dateTime), true);
+    shell.openExternal(event.htmlLink);
+  },
+
+
+  /*
    * Render
    */
 
@@ -50,7 +72,7 @@ export default React.createClass({
       <div className="flex-column">
         <Toolbar key="toolbar" profile={this.state.profile}/>
         <Calendar ref="calendar" key="calendar" view={this.state.view} events={this.state.events} selectedDate={new Date()} onChange={this._handleCalendarSelect}/>
-        <EventList ref="eventlist" key="events" events={this.state.events}/>
+        <EventList ref="eventlist" key="events" onHeaderClick={this._handleHeaderClick} onEventClick={this._handleEventClick} events={this.state.events}/>
       </div>
     );
   }
