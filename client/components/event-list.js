@@ -57,14 +57,15 @@ export default React.createClass({
    */
 
   scrollToDate(date) {
-    if (this.state.animationFrame) {
-      cancelAnimationFrame(this.state.animationFrame);
-    }
+
 
     var group = this._getGroupForDate(date);
 
     var el = this.refs[group];
     if (el) {
+      if (this.state.animationFrame) {
+        cancelAnimationFrame(this.state.animationFrame);
+      }
       this._animateContainer(el.offsetParent, el)
     }
   },
