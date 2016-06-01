@@ -12,7 +12,10 @@ var EventList = require('./components/event-list');
 export default React.createClass({
 
   getInitialState () {
-    return { events: [], view: 'full' };
+    return {
+      events: [],
+      view: 'week'
+    };
   },
 
   componentDidMount () {

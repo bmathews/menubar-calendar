@@ -1,8 +1,10 @@
 import React from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import Month from './month';
+import Week from './week';
 import Icon from '../icon';
 import time from './timeUtils';
+import eventUtils from './eventUtils';
 
 class Calendar extends React.Component {
 
@@ -10,7 +12,8 @@ class Calendar extends React.Component {
     onChange: React.PropTypes.func,
     selectedDate: React.PropTypes.object,
     viewDate: React.PropTypes.object,
-    events: React.PropTypes.array
+    events: React.PropTypes.array,
+    view: React.PropTypes.oneOf(['month', 'week'])
   }
 
   static defaultProps = {
@@ -22,13 +25,22 @@ class Calendar extends React.Component {
     viewDate: this.props.selectedDate
   }
 
-  navigateMonth (amount) {
+  navigate (amount) {
     const now = new Date();
-    const next = time.addMonths(this.state.viewDate, amount)
-    if (next.getMonth() == now.getMonth()) {
-      this.changeDate(now)
+    if (this.props.view === 'month') {
+      const next = time.addMonths(this.state.viewDate, amount)
+      if (next.getMonth() == now.getMonth()) {
+        this.changeDate(now)
+      } else {
+        this.changeDate(next);
+      }
     } else {
-      this.changeDate(next);
+      const next = time.addWeeks(this.state.viewDate, amount)
+      if (time.areSameWeek(now, next)) {
+        this.changeDate(now)
+      } else {
+        this.changeDate(next);
+      }
     }
   }
 
@@ -44,36 +56,45 @@ class Calendar extends React.Component {
     if (this.props.onChange && !silent) this.props.onChange(d);
   }
 
-  getEventsThisMonth () {
-    var events = this.props.events;
-    var viewDate = this.state.viewDate;
-    var forThisMonth = events.filter((e) => {
-      var d = new Date(e.start.dateTime);
-      return d.getFullYear() == viewDate.getFullYear() && d.getMonth() == viewDate.getMonth();
-    });
-
-    return forThisMonth;
+  _renderWeekView () {
+    const events = eventUtils.getEventsForWeek(this.state.viewDate, this.props.events);
+    return (
+      <Week
+        events={events}
+        week={this.state.viewDate}
+        onDayClick={this.changeDate.bind(this)}
+        selectedDate={this.state.selectedDate}
+        viewDate={this.state.viewDate}
+      />
+    );
   }
 
-  _renderMonths () {
-    const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
-    var events = this.getEventsThisMonth();
+  _renderMonthView () {
+    const events = eventUtils.getEventsForMonth(this.state.viewDate, this.props.events);
     return (
-      <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div">
-        <Month
-          key={this.state.viewDate.getMonth()}
-          viewDate={this.state.viewDate}
-          events={events}
-          selectedDate={this.state.selectedDate}
-          onDayClick={this.changeDate.bind(this)} />
-      </CSSTransitionGroup>
+      <Month
+        viewDate={this.state.viewDate}
+        events={events}
+        selectedDate={this.state.selectedDate}
+        onDayClick={this.changeDate.bind(this)} />
     );
+  }
+
+  _renderDaysOfWeek () {
+    var weeks = [];
+    for (var i = 0; i < 7; i++) {
+      weeks.push(
+        <span key={i}>{ time.getShortDayOfWeek(i) }</span>
+      );
+    }
+    return weeks;
   }
 
   render () {
     const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
+    const key = this.props.view === 'month' ? this.state.viewDate.getMonth() : Math.round(time.getFirstDayOfWeek(this.state.viewDate).getDate() / 7);
     return (
-      <div className="calendar">
+      <div className={"calendar calendar--" + this.props.view}>
         <div className="header">
           <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div" className="date">
             <div onMouseDown={this.changeDate.bind(this, undefined)} key={this.state.viewDate.getMonth()} className="date" >
@@ -81,14 +102,19 @@ class Calendar extends React.Component {
               <span className="year">{ this.state.viewDate.getFullYear() }</span>
             </div>
           </CSSTransitionGroup>
-          <div className="previous" onMouseDown={this.navigateMonth.bind(this, -1)}>
+          <div className="previous" onMouseDown={this.navigate.bind(this, -1)}>
             <Icon icon="chevron-left"/>
           </div>
-          <div className="next" onMouseDown={this.navigateMonth.bind(this, 1)}>
+          <div className="next" onMouseDown={this.navigate.bind(this, 1)}>
             <Icon icon="chevron-right"/>
           </div>
         </div>
-        {this._renderMonths()}
+        <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div">
+          <div className="calendar-slider" key={key}>
+            <div className="days-of-week">{ this._renderDaysOfWeek() }</div>
+            {this.props.view === 'month' ? this._renderMonthView() : this._renderWeekView()}
+          </div>
+        </CSSTransitionGroup>
       </div>
     );
   }

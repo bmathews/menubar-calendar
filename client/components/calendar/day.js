@@ -5,7 +5,7 @@ class Day extends React.Component {
   static propTypes = {
     day: React.PropTypes.number,
     onClick: React.PropTypes.func,
-    selectedDate: React.PropTypes.object,
+    selected: React.PropTypes.bool,
     isDifferentMonth: React.PropTypes.bool,
     viewDate: React.PropTypes.object,
     events: React.PropTypes.array
@@ -13,13 +13,6 @@ class Day extends React.Component {
 
   componentWilLReceiveProps (nextProps) {
 
-  }
-
-  isSelected () {
-    const sameYear = this.props.viewDate.getFullYear() === this.props.selectedDate.getFullYear();
-    const sameMonth = this.props.viewDate.getMonth() === this.props.selectedDate.getMonth();
-    const sameDay = this.props.day === this.props.selectedDate.getDate();
-    return sameYear && sameMonth && sameDay && !this.props.isDifferentMonth;
   }
 
   _renderEventIndicator () {
@@ -36,9 +29,9 @@ class Day extends React.Component {
 
   render () {
     const className = 'day'
-      + (this.isSelected() ? ' selected' : '')
+      + (this.props.selected ? ' selected' : '')
       + (this.props.isDifferentMonth ? ' different-month' : '')
-      + (this.props.day < this.props.viewDate.getDate() ? ' past' : '')
+      + (this.props.day < new Date().getDate() ? ' past' : '')
     return (
       <div onMouseDown={this.props.onClick} className={className}>
         <div className="day-tooltip"></div>

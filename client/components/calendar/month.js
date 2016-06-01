@@ -1,6 +1,7 @@
 import React from 'react';
 import time from './timeUtils';
-import Day from './day';
+import eventUtils from './eventUtils';
+import Week from './week';
 
 class Month extends React.Component {
   static propTypes = {
@@ -10,58 +11,32 @@ class Month extends React.Component {
     events: React.PropTypes.array
   }
 
-  handleDayClick (day) {
-    if (this.props.onDayClick) this.props.onDayClick(day);
-  }
-
-  renderWeeks () {
+  _renderWeeks () {
     var weeks = [];
-    for (var i = 0; i < 7; i++) {
-      weeks.push(
-        <span key={i}>{ time.getShortDayOfWeek(i) }</span>
-      );
-    }
-    return weeks;
-  }
-
-  getEventsThisDay (date) {
-    var events = this.props.events;
-    var forThisDay = events.filter((e) => {
-      var d = new Date(e.start.dateTime);
-      return d.getFullYear() == date.getFullYear() && d.getMonth() == date.getMonth() && d.getDate() == date.getDate();
-    });
-    return forThisDay;
-  }
-
-  renderDays () {
-    var days = [];
     var startDate = time.getFirstDayOfMonth(this.props.viewDate);
-    var offset = startDate.getDay();
-    startDate.setDate(startDate.getDate() - offset);
+    startDate.setDate(startDate.getDate() - startDate.getDay());
 
-    for (var i = 0; i < 42; i++) {
-      var events = this.getEventsThisDay(startDate);
-      days.push(
-        <Day
+    for (var i = 0; i < 6; i++) {
+      var events = eventUtils.getEventsForWeek(startDate, this.props.events);
+      weeks.push(
+        <Week
           key={i}
           events={events}
-          day={startDate.getDate()}
-          onClick={this.handleDayClick.bind(this, new Date(startDate))}
+          week={time.clone(startDate)}
+          onDayClick={this.props.onDayClick}
           selectedDate={this.props.selectedDate}
-          isDifferentMonth={startDate.getFullYear() !== this.props.viewDate.getFullYear() || startDate.getMonth() !== this.props.viewDate.getMonth()}
           viewDate={this.props.viewDate}
         />
       );
-      startDate.setDate(startDate.getDate() + 1);
+      startDate.setDate(startDate.getDate() + 7);
     }
-    return days;
+    return weeks;
   }
 
   render () {
     return (
       <div className="month">
-        <div className="weeks">{ this.renderWeeks() }</div>
-        <div className="days">{ this.renderDays() }</div>
+        <div className="weeks">{ this._renderWeeks() }</div>
       </div>
     );
   }

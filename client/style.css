@@ -128,19 +128,26 @@ button, .button {
 }
 
 .calendar {
-  height: 330px;
   position: relative;
   overflow: hidden;
 }
 
-.calendar .month {
-  /*position: absolute;*/
+.calendar--month {
+  height: 330px;
 }
 
-.calendar .weeks {
+.calendar--week {
+  height: 130px;
+}
+
+.calendar .calendar-slider {
+  width: 100%;
+}
+
+.calendar .days-of-week {
   display: flex;
 }
-.calendar .weeks > span {
+.calendar .days-of-week > span {
   flex: 0 0 calc(100% / 7);
   text-align: center;
   color: #bbb;
@@ -151,9 +158,9 @@ button, .button {
   font-family: ".SFNSDisplay-Bold", "Helvetica Neue";
 }
 
-.calendar .days {
+.calendar .week {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
 }
 
 .calendar .day {

@@ -15,6 +15,12 @@ module.exports = {
     return this.getFirstDayOfMonth(d).getDay();
   },
 
+  getFirstDayOfWeek (d) {
+    var newDate = this.clone(d);
+    newDate.setDate(newDate.getDate() - newDate.getDay());
+    return newDate;
+  },
+
   getTimeMode (d) {
     return d.getHours() >= 12 ? 'pm' : 'am';
   },
@@ -103,9 +109,15 @@ module.exports = {
     return newDate;
   },
 
+  addWeeks (d, weeks) {
+    const newDate = this.clone(d);
+    newDate.setDate(newDate.getDate() + weeks * 7);
+    return newDate;
+  },
+
   addMonths (d, months) {
     const newDate = this.clone(d);
-    newDate.setDate(1);
+    newDate.setDate(1); // first
     newDate.setMonth(d.getMonth() + months);
     return newDate;
   },
@@ -144,6 +156,18 @@ module.exports = {
     const newDate = this.clone(d);
     newDate.setMinutes(minutes);
     return newDate;
+  },
+
+  areSameWeek (a, b) {
+    // check within 7 days
+    if (Math.floor((a - b) / 86400000) < 7) {
+      a = this.clone(a);
+      a.setDate(a.getDate() - a.getDay()); // first day of week
+      b = this.clone(b);
+      b.setDate(b.getDate() - b.getDay()); // first day of week
+      return a.getDate() == b.getDate();
+    }
+    return false;
   },
 
   toggleTimeMode (d) {

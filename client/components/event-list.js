@@ -57,8 +57,6 @@ export default React.createClass({
    */
 
   scrollToDate(date) {
-
-
     var group = this._getGroupForDate(date);
 
     var el = this.refs[group];
