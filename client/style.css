@@ -362,6 +362,10 @@ button, .button {
   -webkit-transform: translate3d(0, 0, 0);
 }
 
+.event.current, .event.current .time {
+  color: #FF8A65;
+}
+
 .event:hover {
   background-color: rgba(255,255,255,.05);
 }
