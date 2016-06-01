@@ -1,3 +1,4 @@
+import { shell } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
@@ -107,7 +108,7 @@ export default React.createClass({
     var isCurrent = now.isBetween(start, end);
 
     return (
-      <div key={idx} className={"event" + (isPast ? ' past' : '') + (isCurrent ? ' current' : '')}>
+      <div key={idx} onClick={shell.openExternal.bind(null, event.htmlLink)} className={"event" + (isPast ? ' past' : '') + (isCurrent ? ' current' : '')}>
         <div className="name">
           {name}
           <div className="location">
