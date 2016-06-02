@@ -15,9 +15,9 @@ $ npm start
 
 Before you can start the app, you need Google OAuth client credentials with the Calendar API enabled:
 
-1) Create a project here: https://console.developers.google.com/iam-admin/projects?pli=1
-2) Go to the API Manager and enable the `Calendar API`
-3) Create Credentials > OAuth Client Id, then choose "Other" as the application type
+1. Create a project here: https://console.developers.google.com/iam-admin/projects?pli=1
+2. Go to the API Manager and enable the `Calendar API`
+3. Create Credentials > OAuth Client Id, then choose "Other" as the application type
 
 A `./secrets.json` file is required, with the following clientId and clientSecret:
 
