@@ -81,15 +81,13 @@ button:disabled, .button:disabled {
   pointer-events: none;
 }
 
-.toolbar {
-  border-radius: 3px 3px 0 0;
-  padding: 8px 16px;
-  background: #1E88E5;
-  color: #FFF;
-  line-height: 26px;
-  font-weight: 400;
-  letter-spacing: 1px;
-  text-align: center;
+.menu-icon {
+  display: none;
+  position: absolute;
+  top: 28px;
+  left: 15px;
+  color: #fff;
+  z-index: 1;
 }
 
 .content {
@@ -259,6 +257,7 @@ button, .button {
 
 .calendar .header .date {
   flex: 1;
+  /*margin-left: 35px;*/
 }
 
 .calendar .header .month {
