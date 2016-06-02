@@ -1,5 +1,6 @@
 var Q = require('q');
 var LinvoDB = require("linvodb3");
+LinvoDB.defaults.store = { db: require("medeadown") };
 LinvoDB.dbPath = process.cwd();
 
 var Events = new LinvoDB("events", {});
