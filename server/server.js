@@ -20,7 +20,7 @@ var oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
  */
 
 var mb = menubar({
-  'always-on-top': false,
+  'always-on-top': process.env.NODE_ENV === 'development',
   'transparent': true,
   'dir': 'client/',
   preloadWindow: true,

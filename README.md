@@ -29,3 +29,15 @@ A `./secrets.json` file is required, with the following clientId and clientSecre
   }
 }
 ```
+
+### npm scripts
+
+Open dev tools when app is started with:
+```
+$ npm run dev
+```
+
+Clear out your local database with:
+```
+$ npm run clear-data
+```
