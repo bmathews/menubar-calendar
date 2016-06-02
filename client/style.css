@@ -25,7 +25,7 @@ body {
   border-radius: 4px;
   background-color: rgba(250, 250, 250, .98);
   font-size: 13px;
-  font-family: ".SFNSDisplay-Regular", "Helvetica Neue";
+  font-family: ".SFNSDisplay-Regular", "Helvetica Neue", sans-serif;
   color: #444;
   line-height: 1.4;
   -webkit-font-smoothing: antialiased;
@@ -65,7 +65,7 @@ button, .button {
   border-radius: 3px;
   border: 2px solid #5CC090;
   font-weight: 500;
-  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
+  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue", sans-serif;
   font-size: 13px;
   line-height: 1.4;
   padding: 6px 12px;
@@ -153,7 +153,7 @@ button, .button {
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 600;
-  font-family: ".SFNSDisplay-Bold", "Helvetica Neue";
+  font-family: ".SFNSDisplay-Bold", "Helvetica Neue", sans-serif;
 }
 
 .calendar .week {
@@ -232,7 +232,7 @@ button, .button {
 
 .calendar .day.selected {
   color: #fff;
-  /*font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";*/
+  /*font-family: ".SFNSDisplay-Semibold", "Helvetica Neue", sans-serif;*/
 }
 
 .calendar .week:not(.names) .day:not(.today):not(.selected):hover:before {
@@ -244,7 +244,7 @@ button, .button {
 }
 
 .calendar .day.today {
-  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
+  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue", sans-serif;
 }
 
 .calendar .header {
@@ -263,13 +263,13 @@ button, .button {
 .calendar .header .month {
   font-size: 18px;
   font-weight: 400;
-  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue";
+  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue", sans-serif;
   line-height: 40px;
 }
 
 .calendar .header .year {
   font-size: 18px;
-  font-family: ".SFNSDisplay-Light", "Helvetica Neue";
+  font-family: ".SFNSDisplay-Light", "Helvetica Neue", sans-serif;
   font-weight: 100;
   color: rgba(255,255,255,.5);
   padding-left: 4px;
@@ -357,7 +357,7 @@ button, .button {
   margin-top: 12px;
   padding: 4px 17px;
   color: rgba(255,255,255,.5);
-  font-family: ".SFNSDisplay-Regular", "Helvetica Neue";
+  font-family: ".SFNSDisplay-Regular", "Helvetica Neue", sans-serif;
   font-size: 12px;
 }
 
