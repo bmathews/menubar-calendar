@@ -55,7 +55,7 @@ export default class Auth {
         'use-content-size': true
       });
 
-      win.loadUrl(url);
+      win.loadURL(url);
 
       win.on('closed', () => {
         reject(new Error('User closed the window'));
