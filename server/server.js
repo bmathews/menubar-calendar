@@ -20,7 +20,7 @@ var oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
  */
 
 var mb = menubar({
-  'always-on-top': true,
+  'always-on-top': false,
   'transparent': true,
   'dir': 'client/',
   preloadWindow: true,
@@ -86,7 +86,7 @@ ipc.on('auth.get', async function (event) {
 });
 
 
-if (process.env.NODE_ENV === 'development') { 
+if (process.env.NODE_ENV === 'development') {
   /*
   * Open dev tools after window is shown
   */

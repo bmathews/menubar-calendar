@@ -4,7 +4,6 @@ const gcal = google.calendar('v3');
 
 export default class CalendarAPI {
 
-  static get DAYS_TO_SYNC() { return 30 }
   static get MAX_RESULTS() { return 1000 }
 
 
@@ -40,11 +39,11 @@ export default class CalendarAPI {
       opts.syncToken = nextSyncToken;
     } else if (!nextPageToken) {
       var start = new Date();
+      start.setDate(start.getDate() - 30);
       start.setHours(0);
       start.setMinutes(0);
-      start.setSeconds(0);
-      var end = new Date(start);
-      end.setDate(end.getDate() + CalendarAPI.DAYS_TO_SYNC);
+      var end = new Date();
+      end.setDate(end.getDate() + 30);
       opts.timeMin = start.toISOString();
       opts.timeMax = end.toISOString();
     }
