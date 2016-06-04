@@ -158,9 +158,21 @@ module.exports = {
     return newDate;
   },
 
+  isBetween(date, a, b) {
+    return date >= a && date <= b;
+  },
+
+  daysBetween(a, b) {
+    return Math.floor((a - b) / 86400000)
+  },
+
+  areSameDay (a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  },
+
   areSameWeek (a, b) {
     // check within 7 days
-    if (Math.floor((a - b) / 86400000) < 7) {
+    if (this.daysBetween(a, b) < 7) {
       a = this.clone(a);
       a.setDate(a.getDate() - a.getDay()); // first day of week
       b = this.clone(b);

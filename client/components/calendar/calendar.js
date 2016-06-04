@@ -1,9 +1,8 @@
 import React from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import Month from './month';
-import Week from './week';
+import Day from './day';
 import Icon from '../icon';
-import time from './timeUtils';
+import timeUtils from './timeUtils';
 import eventUtils from './eventUtils';
 
 class Calendar extends React.Component {
@@ -25,24 +24,34 @@ class Calendar extends React.Component {
     viewDate: this.props.selectedDate
   }
 
+
+  /*
+   * Navigate forward/backward by month or week
+   */
+
   navigate (amount) {
     const now = new Date();
     if (this.props.view === 'month') {
-      const next = time.addMonths(this.state.viewDate, amount)
+      const next = timeUtils.addMonths(this.state.viewDate, amount)
       if (next.getMonth() == now.getMonth()) {
-        this.changeDate(now)
+        this.changeDate(now);
       } else {
         this.changeDate(next);
       }
     } else {
-      const next = time.addWeeks(this.state.viewDate, amount)
-      if (time.areSameWeek(now, next)) {
-        this.changeDate(now)
+      const next = timeUtils.addWeeks(this.state.viewDate, amount)
+      if (timeUtils.areSameWeek(now, next)) {
+        this.changeDate(now);
       } else {
         this.changeDate(next);
       }
     }
   }
+
+
+  /*
+   * Change the date, optionally emit onChange event
+   */
 
   changeDate (d = new Date(), silent = false) {
     const direction = d.getTime() < this.state.viewDate.getTime() ? 'left' : 'right';
@@ -56,35 +65,64 @@ class Calendar extends React.Component {
     if (this.props.onChange && !silent) this.props.onChange(d);
   }
 
-  _renderWeekView () {
-    const events = eventUtils.getEventsForWeek(this.state.viewDate, this.props.events);
-    return (
-      <Week
-        events={events}
-        week={this.state.viewDate}
-        onDayClick={this.changeDate.bind(this)}
-        selectedDate={this.state.selectedDate}
-        viewDate={this.state.viewDate}
-      />
-    );
+
+  /*
+   * Render days between start/end
+   */
+
+  _renderDays(start, end) {
+    var count = timeUtils.daysBetween(end, start);
+    var current = start;
+    var elements = [];
+    for (let i = 0; i < count; i++) {
+      elements.push(
+        <Day
+          key={current.getTime()}
+          day={current.getDate()}
+          onClick={this.changeDate.bind(this, new Date(current), false)}
+          selected={timeUtils.areSameDay(current, this.state.selectedDate)}
+          isDifferentMonth={current.getFullYear() !== this.state.viewDate.getFullYear() || current.getMonth() !== this.state.viewDate.getMonth()}
+          events={eventUtils.getEventsForDay(current, this.props.events)}
+        />
+      )
+      current = timeUtils.addDays(current, 1);
+    }
+    return elements;
   }
 
-  _renderMonthView () {
-    const events = eventUtils.getEventsForMonth(this.state.viewDate, this.props.events);
-    return (
-      <Month
-        viewDate={this.state.viewDate}
-        events={events}
-        selectedDate={this.state.selectedDate}
-        onDayClick={this.changeDate.bind(this)} />
-    );
+
+  /*
+   * Render the week view for the current viewDate
+   */
+
+  _renderWeekView () {
+    const startDate = timeUtils.getFirstDayOfWeek(this.state.viewDate);
+    const endDate = timeUtils.addDays(startDate, 7);
+    return this._renderDays(startDate, endDate);
   }
+
+
+  /*
+   * Render the month view for the current viewDate
+   */
+
+  _renderMonthView () {
+    const startDate = timeUtils.getFirstDayOfMonth(this.state.viewDate);
+    startDate.setDate(startDate.getDate() - startDate.getDay()); // first day of week
+    const endDate = timeUtils.addDays(startDate, 42);
+    return this._renderDays(startDate, endDate);
+  }
+
+
+  /*
+   * Render days of the week labels
+   */
 
   _renderDaysOfWeek () {
     var weeks = [];
     for (var i = 0; i < 7; i++) {
       weeks.push(
-        <span key={i}>{ time.getShortDayOfWeek(i) }</span>
+        <span key={i}>{ timeUtils.getShortDayOfWeek(i) }</span>
       );
     }
     return weeks;
@@ -92,13 +130,13 @@ class Calendar extends React.Component {
 
   render () {
     const animation = this.state.direction === 'left' ? 'slide-left' : 'slide-right';
-    const key = this.props.view === 'month' ? this.state.viewDate.getMonth() : Math.round(time.getFirstDayOfWeek(this.state.viewDate).getDate() / 7);
+    const key = this.props.view === 'month' ? this.state.viewDate.getMonth() : Math.round(timeUtils.getFirstDayOfWeek(this.state.viewDate).getDate() / 7);
     return (
       <div className={"calendar calendar--" + this.props.view}>
         <div className="header">
           <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div" className="date">
             <div onMouseDown={this.changeDate.bind(this, undefined, false)} key={this.state.viewDate.getMonth()}>
-              <span className="month">{ time.getFullMonth(this.state.viewDate)}</span>
+              <span className="month">{ timeUtils.getFullMonth(this.state.viewDate)}</span>
               <span className="year">{ this.state.viewDate.getFullYear() }</span>
             </div>
           </CSSTransitionGroup>
@@ -112,7 +150,9 @@ class Calendar extends React.Component {
         <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div">
           <div className="calendar-slider" key={key}>
             <div className="days-of-week">{ this._renderDaysOfWeek() }</div>
-            {this.props.view === 'month' ? this._renderMonthView() : this._renderWeekView()}
+            <div className="days">
+              {this.props.view === 'month' ? this._renderMonthView() : this._renderWeekView()}
+            </div>
           </div>
         </CSSTransitionGroup>
       </div>

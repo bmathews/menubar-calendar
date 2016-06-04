@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import time from './calendar/timeUtils';
+import timeUtils from './calendar/timeUtils';
 import _ from 'lodash';
 
 export default React.createClass({
@@ -138,7 +138,7 @@ export default React.createClass({
     let name = event.summary;
     let start = new Date(event.start.dateTime);
     let end = new Date(event.end.dateTime);
-    let timeRange = `${time.formatTime(start, 'ampm')} - ${time.formatTime(end, 'ampm')}`;
+    let timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;
     var now = new Date();
     var isPast = end < now;
     var isCurrent = now >= start && now <= end;

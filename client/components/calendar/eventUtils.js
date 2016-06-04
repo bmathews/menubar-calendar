@@ -1,30 +1,32 @@
-import time from './timeUtils';
+import timeUtils from './timeUtils';
 
 module.exports = {
 
   getEventsForMonth(date, events) {
-    var forThisMonth = events.filter((e) => {
+    return events.filter((e) => {
       var d = new Date(e.start.dateTime);
       return d.getFullYear() == date.getFullYear() && d.getMonth() == date.getMonth();
     });
+  },
 
-    return forThisMonth;
+  getEventsBetween(start, end, events) {
+    return events.filter((e) => {
+      return timeUtils.isBetween(new Date(e.start.dateTime), start, end);
+    });
   },
 
   getEventsForWeek(date, events) {
-    var forThisWeek = events.filter((e) => {
+    return events.filter((e) => {
       var d = new Date(e.start.dateTime);
-      return time.areSameWeek(d, date);
+      return timeUtils.areSameWeek(d, date);
     });
-    return forThisWeek;
   },
 
   getEventsForDay(date, events) {
-    var forThisDay = events.filter((e) => {
+    return events.filter((e) => {
       var d = new Date(e.start.dateTime);
       return d.getFullYear() == date.getFullYear() && d.getMonth() == date.getMonth() && d.getDate() == date.getDate();
     });
-    return forThisDay;
   }
 
 };

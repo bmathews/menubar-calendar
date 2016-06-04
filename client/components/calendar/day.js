@@ -1,5 +1,4 @@
 import React from 'react';
-import time from './timeUtils';
 
 class Day extends React.Component {
   static propTypes = {
@@ -11,9 +10,10 @@ class Day extends React.Component {
     events: React.PropTypes.array
   }
 
-  componentWilLReceiveProps (nextProps) {
 
-  }
+  /*
+   * Total the number of hours of events, then display an indicator based on 8 hours a day
+   */
 
   _renderEventIndicator () {
     if (this.props.events.length) {
