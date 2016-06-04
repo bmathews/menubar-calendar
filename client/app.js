@@ -27,9 +27,19 @@ export default React.createClass({
     ipc.off('app.after-show', this._resetDate);
   },
 
+
+  /*
+   * Fired when sync service has updated
+   */
+
   _updateEvents (sender, events) {
     this.setState({ events: events});
   },
+
+
+  /*
+   * Fired when app is shown - set date to today
+   */
 
   _resetDate () {
     this.refs.calendar.changeDate();
