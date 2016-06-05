@@ -1,5 +1,6 @@
 import React from 'react';
 import timeUtils from '../calendar/timeUtils';
+import eventUtils from '../calendar/eventUtils';
 import classNames from 'classnames';
 
 class Event extends React.Component {
@@ -16,8 +17,8 @@ class Event extends React.Component {
 
   render() {
     const event = this.props.event;
-    const start = new Date(event.start.dateTime || event.start.date);
-    const end = new Date(event.end.dateTime || event.end.date);
+    const start = eventUtils.getEventStartDate(event);
+    const end = eventUtils.getEventEndDate(event);
     let timeRange = 'All day';
     if (event.start.dateTime) {
       timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;

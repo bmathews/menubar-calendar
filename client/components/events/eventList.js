@@ -1,5 +1,6 @@
 import React from 'react';
 import timeUtils from '../calendar/timeUtils';
+import eventUtils from '../calendar/eventUtils';
 import Event from './event';
 import _ from 'lodash';
 
@@ -53,24 +54,24 @@ class EventList extends React.Component {
 
     let last = now;
     events.forEach(e => {
-      const d = new Date(e.start.dateTime || e.start.date);
-      d.setHours(0, 0, 0, 0);
+      const dates = eventUtils.getDatesForEvent(e);
 
-      const format = this._getGroupForDate(d);
+      dates.forEach(d => {
+        const format = this._getGroupForDate(d);
 
-      // there's no events for today, so create one
-      if (last < now && d > now) {
-        groups[this._getGroupForDate(now)] = [];
-      }
+        // there're no events for today, so create one
+        if (last < now && d > now) {
+          groups[this._getGroupForDate(now)] = [];
+        }
 
-      if (!groups[format]) {
-        groups[format] = [e];
-      } else {
-        groups[format].push(e);
-      }
+        if (!groups[format]) {
+          groups[format] = [e];
+        } else {
+          groups[format].push(e);
+        }
 
-
-      last = d;
+        last = d;
+      });
     });
 
     return groups;

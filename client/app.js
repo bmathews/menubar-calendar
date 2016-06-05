@@ -7,6 +7,7 @@ import React from 'react';
 import Icon from './components/icon';
 import Calendar from './components/calendar/calendar';
 import EventList from './components/events/eventList';
+import eventUtils from './components/calendar/eventUtils';
 
 class App extends React.Component {
 
@@ -31,8 +32,8 @@ class App extends React.Component {
 
   _updateEvents = (sender, events) => {
     this.setState({ events: events.sort((a, b) => {
-      const aStart = a.start.dateTime || a.start.date;
-      const bStart = b.start.dateTime || b.start.date;
+      const aStart = eventUtils.getEventStartDate(a);
+      const bStart = eventUtils.getEventStartDate(b);
       if (aStart < bStart) return -1;
       if (aStart > bStart) return 1;
       return 0;
@@ -69,7 +70,7 @@ class App extends React.Component {
    */
 
   _handleEventClick = (event) => {
-    this.refs.calendar.changeDate(new Date(event.start.dateTime || event.start.date), true);
+    this.refs.calendar.changeDate(eventUtils.getEventStartDate(event), true);
     shell.openExternal(event.htmlLink);
   }
 
