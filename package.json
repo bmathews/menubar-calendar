@@ -39,7 +39,7 @@
     "dev": "NODE_ENV=development npm start",
     "start": "./node_modules/.bin/electron .",
     "clear-data": "node ./scripts/cleardb.js && node ./scripts/clearauth.js && node ./scripts/clearsynctokens.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint",
     "lint": "eslint **/*.js"
   },
   "author": "",
