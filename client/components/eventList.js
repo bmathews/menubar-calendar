@@ -162,7 +162,7 @@ class EventList extends React.Component {
   _renderEvent(event, idx) {
     let name = event.summary;
     const start = new Date(event.start.dateTime || event.start.date);
-    const end = new Date(event.end.dateTime || event.start.date);
+    const end = new Date(event.end.dateTime || event.end.date);
     let timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;
     const now = new Date();
     const isPast = end < now;
