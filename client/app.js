@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import Icon from './components/icon';
 import Calendar from './components/calendar/calendar';
-import EventList from './components/eventList';
+import EventList from './components/events/eventList';
 
 class App extends React.Component {
 

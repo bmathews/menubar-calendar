@@ -1,6 +1,6 @@
 import React from 'react';
-import timeUtils from './calendar/timeUtils';
-import classNames from 'classnames';
+import timeUtils from '../calendar/timeUtils';
+import Event from './event';
 import _ from 'lodash';
 
 class EventList extends React.Component {
@@ -136,7 +136,7 @@ class EventList extends React.Component {
    *  Handle when an event is clicked on
    */
 
-  _handleEventClick(event) {
+  _handleEventClick = (event) => {
     if (this.props.onEventClick) {
       this.props.onEventClick(event);
     }
@@ -147,7 +147,8 @@ class EventList extends React.Component {
    * Handle when a group header is clicked on
    */
 
-  _handleHeaderClick(group) {
+  _handleHeaderClick = (e) => {
+    const group = e.currentTarget.innerText;
     if (this.props.onHeaderClick) {
       const d = new Date(group.substr(group.indexOf(' ') + 1));
       this.props.onHeaderClick(d);
@@ -159,33 +160,9 @@ class EventList extends React.Component {
    * Render the individual event item
    */
 
-  _renderEvent(event, idx) {
-    let name = event.summary;
-    const start = new Date(event.start.dateTime || event.start.date);
-    const end = new Date(event.end.dateTime || event.end.date);
-    let timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;
-    const now = new Date();
-    const isPast = end < now;
-    const isCurrent = now >= start && now <= end;
-
-    const eventClasses = classNames({
-      event: true,
-      past: isPast,
-      current: isCurrent
-    });
-
-    return (
-      <div key={idx} onMouseDown={this._handleEventClick.bind(this, event)} className={eventClasses}>
-        <div className="name">
-          {name}
-          <div className="location">
-            {event.location}
-          </div>
-        </div>
-        <div className="time">{timeRange}</div>
-      </div>
-    );
-  }
+  _renderEvent = (event, idx) => (
+    <Event event={event} key={idx} onClick={this._handleEventClick} />
+  )
 
 
   /*
@@ -195,17 +172,16 @@ class EventList extends React.Component {
   render() {
     const items = _.map(this.state.groupedEvents, (subItems, key) => {
       const header = (
-        <div ref={key} className="event-list-header" onMouseDown={this._handleHeaderClick.bind(this, key)}>{key}</div>
+        <div ref={key} className="event-list-header" onMouseDown={this._handleHeaderClick}>{key}</div>
       );
-      const els = subItems.map((e, i) => (
-        this._renderEvent(e, i)
-      ));
+      const els = subItems.map(this._renderEvent);
 
       if (!els.length && key.indexOf('Today') === 0) {
         els.push(
           <div className="event empty">No events today!</div>
         );
       }
+
       return [header].concat(els);
     });
 

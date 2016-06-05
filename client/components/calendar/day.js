@@ -19,11 +19,12 @@ class Day extends React.Component {
 
   _renderEventIndicator() {
     if (this.props.events.length) {
-      const eventHours = this.props.events.reduce((total, e) => (
-        if (e.start.dateTime && e.end.dateTime) {
-          total + new Date(e.end.dateTime).getTime() - new Date(e.start.dateTime).getTime()
+      const eventHours = this.props.events.reduce((total, e) => {
+        if (e.start.dateTime) {
+          return total + new Date(e.end.dateTime).getTime() - new Date(e.start.dateTime).getTime();
         }
-      ), 0) / 1000 / 60 / 60;
+        return 1;
+      }, 0) / 1000 / 60 / 60;
       const width = Math.min(eventHours / 8, 100);
       return (
         <span className="dot" style={{ width: `${width * 100}%` }}></span>
