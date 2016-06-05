@@ -1,73 +1,71 @@
-import CalendarAPI from './api/CalendarAPI'
-import CalendarStore from './CalendarStore'
-const api = new CalendarAPI()
-const store = new CalendarStore()
+import CalendarAPI from './api/CalendarAPI';
+import CalendarStore from './CalendarStore';
+const api = new CalendarAPI();
+const store = new CalendarStore();
 
-import Configstore from 'configstore'
+import Configstore from 'configstore';
 const conf = new Configstore('menu-calendar');
 
-import EventEmitter from 'events'
+import EventEmitter from 'events';
 
 export default class extends EventEmitter {
 
-  setAuth (auth) {
+  setAuth(auth) {
     api.setAuth(auth);
   }
 
-  async update () {
+  async update() {
     try {
-      console.log("Sync: #update: Starting");
+      console.log('Sync: #update: Starting');
 
-      let { syncTokens, items } = await api.syncEvents(conf.get('syncTokens') || {});
-      conf.set('syncTokens', syncTokens)
+      const { syncTokens, items } = await api.syncEvents(conf.get('syncTokens') || {});
+      conf.set('syncTokens', syncTokens);
 
-      await store.removeItems(items.remove)
-      await store.setItems(items.save)
+      await store.removeItems(items.remove);
+      await store.setItems(items.save);
 
-      console.log("Sync: #update: Synced and updated store");
+      console.log('Sync: #update: Synced and updated store');
 
-      var start = new Date();
+      const start = new Date();
       start.setDate(start.getDate() - 30);
       start.setHours(0);
       start.setMinutes(0);
-      var end = new Date();
+      const end = new Date();
       end.setDate(end.getDate() + 30);
 
-      console.log("Sync: #update: Now pulling all from store");
+      console.log('Sync: #update: Now pulling all from store');
 
-      var events = await store.getByDate(start.toISOString(), end.toISOString());
+      const events = await store.getByDate(start.toISOString(), end.toISOString());
 
-      console.log("Sync: #update: Update done, firing update:", events.length);
+      console.log('Sync: #update: Update done, firing update:', events.length);
 
       this.emit('update', events);
-
     } catch (e) {
       console.error(e, e.stack);
     }
 
     this.timeout = setTimeout(this.update.bind(this), 1000 * 30);
-
   }
 
-  async start () {
+  async start() {
     if (this.timeout) this.stop();
 
-    var start = new Date();
+    const start = new Date();
     start.setDate(start.getDate() - 30);
     start.setHours(0);
     start.setMinutes(0);
-    var end = new Date();
+    const end = new Date();
     end.setDate(end.getDate() + 30);
-    
-    var events = await store.getByDate(start.toISOString(), end.toISOString());
+
+    const events = await store.getByDate(start.toISOString(), end.toISOString());
     this.emit('update', events);
 
-    console.log("Sync: #start: Start");
+    console.log('Sync: #start: Start');
 
     this.update();
   }
 
-  stop () {
+  stop() {
     clearTimeout(this.timeout);
   }
 }

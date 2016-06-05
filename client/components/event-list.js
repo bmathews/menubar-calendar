@@ -1,29 +1,30 @@
 import React from 'react';
 import moment from 'moment';
 import timeUtils from './calendar/timeUtils';
+import classNames from 'classnames';
 import _ from 'lodash';
 
-export default React.createClass({
+class EventList extends React.Component {
 
-  propTypes: {
+  static propTypes = {
+    onEventClick: React.PropTypes.func,
+    onHeaderClick: React.PropTypes.func,
     events: React.PropTypes.array.isRequired
-  },
+  }
 
-  getInitialState() {
-    return {
-      groupedEvents: {}
-    }
-  },
+  state = {
+    groupedEvents: {}
+  }
 
-  componentWillUnmount () {
+  componentWillReceiveProps(nextProps) {
+    this.state.groupedEvents = this._groupEvents(nextProps.events);
+  }
+
+  componentWillUnmount() {
     if (this.state.animationFrame) {
       cancelAnimationFrame(this.state.animationFrame);
     }
-  },
-
-  componentWillReceiveProps (nextProps) {
-    this.state.groupedEvents = this._groupEvents(nextProps.events)
-  },
+  }
 
 
   /*
@@ -38,18 +39,18 @@ export default React.createClass({
       nextDay: '[Tomorrow] MM/DD/YY',
       nextWeek: 'dddd MM/DD/YY'
     });
-  },
+  }
 
 
   /*
    * Group events by date
    */
 
-  _groupEvents (events) {
-    return _.groupBy(events, (e) => {
-      return this._getGroupForDate(e.start.dateTime || e.start.date);
-    });
-  },
+  _groupEvents(events) {
+    return _.groupBy(events, (e) => (
+      this._getGroupForDate(e.start.dateTime || e.start.date)
+    ));
+  }
 
 
   /*
@@ -57,16 +58,16 @@ export default React.createClass({
    */
 
   scrollToDate(date) {
-    var group = this._getGroupForDate(date);
+    const group = this._getGroupForDate(date);
 
-    var el = this.refs[group];
+    const el = this.refs[group];
     if (el) {
       if (this.state.animationFrame) {
         cancelAnimationFrame(this.state.animationFrame);
       }
-      this._animateContainer(el.offsetParent, el)
+      this._animateContainer(el.offsetParent, el);
     }
-  },
+  }
 
 
   /*
@@ -74,77 +75,83 @@ export default React.createClass({
    */
 
   _animateContainer(container, el) {
-    var easeInOutQuad = function (t, b, c, d) {
-      t /= d/2;
-      if (t < 1) return c/2*t*t + b;
+    function easeInOutQuad(t, b, c, d) {
+      t /= d / 2;
+      if (t < 1) return c / 2 * t * t + b;
       t--;
-      return -c/2 * (t*(t-2) - 1) + b;
-    };
+      return -c / 2 * (t * (t - 2) - 1) + b;
+    }
 
-    var target = el.offsetTop - 10;
-    var start = container.scrollTop;
-    var time = 250;
-    var elapsed = 0;
-    var last = new Date().getTime();
+    const target = el.offsetTop - 10;
+    const start = container.scrollTop;
+    const time = 250;
+    let elapsed = 0;
+    let last = new Date().getTime();
 
-    var anim = () => {
-      var req = requestAnimationFrame(() => {
-        var now = new Date().getTime();
-        var delta = now - last;
+    const anim = () => {
+      const req = requestAnimationFrame(() => {
+        const now = new Date().getTime();
+        const delta = now - last;
         elapsed += delta;
-        var val = easeInOutQuad(Math.min(elapsed, time), start, target - start, time);
+        const val = easeInOutQuad(Math.min(elapsed, time), start, target - start, time);
         container.scrollTop = val;
         last = now;
-        if (val != target) {
+        if (val !== target) {
           anim();
         } else {
           this.state.animationFrame = null;
         }
       });
       this.state.animationFrame = req;
-    }
+    };
     anim();
-  },
+  }
 
 
   /*
    *  Handle when an event is clicked on
    */
 
-  _handleEventClick (event) {
+  _handleEventClick(event) {
     if (this.props.onEventClick) {
       this.props.onEventClick(event);
     }
-  },
+  }
 
 
   /*
    * Handle when a group header is clicked on
    */
 
-  _handleHeaderClick (group) {
+  _handleHeaderClick(group) {
     if (this.props.onHeaderClick) {
       const d = new Date(group.substr(group.indexOf(' ') + 1));
       this.props.onHeaderClick(d);
     }
-  },
+  }
 
 
   /*
    * Render the individual event item
    */
 
-  _renderEvent (event, idx) {
+  _renderEvent(event, idx) {
     let name = event.summary;
-    let start = new Date(event.start.dateTime);
-    let end = new Date(event.end.dateTime);
+    const start = new Date(event.start.dateTime);
+    const end = new Date(event.end.dateTime);
     let timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;
-    var now = new Date();
-    var isPast = end < now;
-    var isCurrent = now >= start && now <= end;
+    const now = new Date();
+    const isPast = end < now;
+    const isCurrent = now >= start && now <= end;
+
+    const eventClasses = classNames({
+      event: true,
+      past: isPast,
+      current: isCurrent
+    });
 
     return (
-      <div key={idx} onMouseDown={this._handleEventClick.bind(this, event)} className={"event" + (isPast ? ' past' : '') + (isCurrent ? ' current' : '')}>
+      <div key={idx} onMouseDown={this._handleEventClick.bind(this, event)} className={eventClasses}>
         <div className="name">
           {name}
           <div className="location">
@@ -154,27 +161,28 @@ export default React.createClass({
         <div className="time">{timeRange}</div>
       </div>
     );
-  },
+  }
 
 
   /*
    * Render the list of events
    */
 
-  render () {
-    var items = _.map(this.state.groupedEvents, (subItems, key) => {
-      var header = (
+  render() {
+    const items = _.map(this.state.groupedEvents, (subItems, key) => {
+      const header = (
         <div ref={key} className="event-list-header" onMouseDown={this._handleHeaderClick.bind(this, key)}>{key}</div>
       );
-      var els = subItems.map((e, i) => {
-        return this._renderEvent(e, i);
-      });
+      const els = subItems.map((e, i) => (
+        this._renderEvent(e, i)
+      ));
       return [header].concat(els);
-    })
+    });
 
     return (
-      <div className="event-list">{ items }</div>
+      <div className="event-list">{items}</div>
     );
   }
+}
 
-});
+export default EventList;

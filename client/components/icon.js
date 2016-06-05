@@ -2,29 +2,27 @@ import React from 'react';
 
 /* Subset of the SVG icon collection from the Polymer project (goo.gl/N7SB5G) */
 
-export default React.createClass({
-  propTypes: {
+class Icon extends React.Component {
+  static propTypes = {
     icon: React.PropTypes.string.isRequired,
     size: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.number
     ]),
     style: React.PropTypes.object
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      size: 24
-    };
-  },
+  static defaultProps = {
+    size: 24
+  }
 
   renderGraphic() {
     switch (this.props.icon) {
       case 'menu':
         return (
           <g>
-              <path d="M0 0h24v24H0z" fill="none"/>
-              <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
           </g>
         );
       case 'chevron-right':
@@ -35,13 +33,15 @@ export default React.createClass({
         return (
           <g><path d="M15.41 7.41l-1.41-1.41-6 6 6 6 1.41-1.41-4.58-4.59z"></path></g>
         );
+      default:
+        return null;
     }
-  },
+  }
 
   render() {
     let styles = {
-      fill: "currentcolor",
-      verticalAlign: "middle",
+      fill: 'currentcolor',
+      verticalAlign: 'middle',
       width: this.props.size,
       height: this.props.size
     };
@@ -51,4 +51,6 @@ export default React.createClass({
       </svg>
     );
   }
-});
+}
+
+export default Icon;

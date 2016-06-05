@@ -1,10 +1,10 @@
-import Q from 'q'
-import google from 'googleapis'
+import Q from 'q';
+import google from 'googleapis';
 const gcal = google.calendar('v3');
 
 export default class CalendarAPI {
 
-  static get MAX_RESULTS() { return 1000 }
+  static MAX_RESULTS = 1000;
 
 
   /*
@@ -23,26 +23,25 @@ export default class CalendarAPI {
    */
 
   _getQueryOptions(syncTokens) {
-
     const nextSyncToken = syncTokens.nextSyncToken;
     const nextPageToken = syncTokens.nextPageToken;
 
-    var opts = {
+    const opts = {
       auth: this.oauth.client,
       calendarId: 'primary',
       maxResults: CalendarAPI.MAX_RESULTS,
       timeZone: 'GMT',
       singleEvents: true
-    }
+    };
 
     if (nextSyncToken) {
       opts.syncToken = nextSyncToken;
     } else if (!nextPageToken) {
-      var start = new Date();
+      const start = new Date();
       start.setDate(start.getDate() - 30);
       start.setHours(0);
       start.setMinutes(0);
-      var end = new Date();
+      const end = new Date();
       end.setDate(end.getDate() + 30);
       opts.timeMin = start.toISOString();
       opts.timeMax = end.toISOString();
@@ -55,44 +54,45 @@ export default class CalendarAPI {
     return opts;
   }
 
-  async syncEvents(syncTokens, collector={ save: [], remove: [] }) {
+  async syncEvents(syncTokens, collector = { save: [], remove: [] }) {
+    console.log('CalendarAPI: #syncEvents: Starting sync');
 
-    console.log("CalendarAPI: #syncEvents: Starting sync")
+    const queryOpts = this._getQueryOptions(syncTokens);
 
-    var queryOpts = this._getQueryOptions(syncTokens)
+    const resp = await Q.nfcall(gcal.events.list, queryOpts);
+    const data = resp[0];
 
-    let resp = await Q.nfcall(gcal.events.list, queryOpts)
-    let data = resp[0]
-
-    console.log("CalendarAPI: #syncEvents: Processing list response")
+    console.log('CalendarAPI: #syncEvents: Processing list response');
 
     // Group items by action
     data.items.forEach((i) => {
-      if (i.status == 'cancelled') {
-        collector.remove.push(i)
+      if (i.status === 'cancelled') {
+        collector.remove.push(i);
       } else {
-        collector.save.push(i)
+        collector.save.push(i);
       }
-    })
+    });
 
-    console.log(`CalendarAPI: #syncEvents: Response: save.length = ${collector.save.length}, remove.length = ${collector.remove.length}`)
+    console.log(`CalendarAPI: #syncEvents: Response: save.length = ${collector.save.length}, remove.length = ${collector.remove.length}`);
 
     // Fetch next page of results
     if (data.nextPageToken) {
-      console.log("CalendarAPI: #syncEvents: Fetching next page");
+      console.log('CalendarAPI: #syncEvents: Fetching next page');
       syncTokens.nextPageToken = data.nextPageToken;
       return await this.syncEvents(syncTokens, collector);
     }
 
     // Finished, so return collector
     if (data.nextSyncToken) {
-      console.log("CalendarAPI: #syncEvents: Finished syncing");
+      console.log('CalendarAPI: #syncEvents: Finished syncing');
       syncTokens.nextSyncToken = data.nextSyncToken;
       delete syncTokens.nextPageToken;
       return {
         syncTokens,
         items: collector
-      }
+      };
     }
+
+    return null;
   }
 }

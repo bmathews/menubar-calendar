@@ -1,9 +1,10 @@
-var Q = require('q');
-var LinvoDB = require("linvodb3");
-LinvoDB.defaults.store = { db: require("medeadown") };
+import Q from 'q';
+import LinvoDB from 'linvodb3';
+import medeadown from 'medeadown';
+LinvoDB.defaults.store = { db: medeadown };
 LinvoDB.dbPath = process.cwd();
 
-var Events = new LinvoDB("events", {});
+const Events = new LinvoDB('events', {});
 
 class CalendarStore {
 
@@ -11,16 +12,16 @@ class CalendarStore {
    * Save or update items
    */
 
-  setItems (items) {
-    var list = items.map((i) => {
-      var copy = Object.assign({}, i);
-      var id = copy.id;
+  setItems(items) {
+    const list = items.map((i) => {
+      const copy = Object.assign({}, i);
+      const id = copy.id;
       copy._id = id;
       return copy;
     });
 
-    console.log("CalendarStore: #setItems: Saving all items: ", list.length);
-    return Q.ninvoke(Events, "save", list);
+    console.log('CalendarStore: #setItems: Saving all items: ', list.length);
+    return Q.ninvoke(Events, 'save', list);
   }
 
 
@@ -28,12 +29,10 @@ class CalendarStore {
    * Remove items
    */
 
-  removeItems (items) {
-    var ids = items.map((i) => {
-      return i.id;
-    });
-    console.log("CalendarStore: #removeItems: Removing items: ", ids.length);
-    return Q.ninvoke(Events, "remove", { _id: { $in: ids } }, { multi: true });
+  removeItems(items) {
+    const ids = items.map(i => i.id);
+    console.log('CalendarStore: #removeItems: Removing items: ', ids.length);
+    return Q.ninvoke(Events, 'remove', { _id: { $in: ids } }, { multi: true });
   }
 
 
@@ -41,26 +40,26 @@ class CalendarStore {
    * Get all items between start/end time range
    */
 
-  getByDate (start, end) {
+  getByDate(start, end) {
     return new Promise((resolve, reject) => {
-      Events.find({'start.dateTime': { $gte: start, $lte: end }}).sort({ 'start.dateTime': 1 }).exec((err, res) => {
-        if (err) return reject(err)
-        return resolve(res)
-      })
-    })
+      Events.find({ 'start.dateTime': { $gte: start, $lte: end } }).sort({ 'start.dateTime': 1 }).exec((err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      });
+    });
   }
 
 
   /*
    * Get all items
    */
-  getAll () {
+  getAll() {
     return new Promise((resolve, reject) => {
       Events.find({}).sort({ 'start.dateTime': 1 }).exec((err, res) => {
-        if (err) return reject(err)
-        return resolve(res)
-      })
-    })
+        if (err) return reject(err);
+        return resolve(res);
+      });
+    });
   }
 }
 

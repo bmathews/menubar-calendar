@@ -1,31 +1,31 @@
 module.exports = {
 
-  getDaysInMonth (d) {
+  getDaysInMonth(d) {
     const resultDate = this.getFirstDayOfMonth(d);
     resultDate.setMonth(resultDate.getMonth() + 1);
     resultDate.setDate(resultDate.getDate() - 1);
     return resultDate.getDate();
   },
 
-  getFirstDayOfMonth (d) {
+  getFirstDayOfMonth(d) {
     return new Date(d.getFullYear(), d.getMonth(), 1);
   },
 
-  getFirstWeekDay (d) {
+  getFirstWeekDay(d) {
     return this.getFirstDayOfMonth(d).getDay();
   },
 
-  getFirstDayOfWeek (d) {
-    var newDate = this.clone(d);
+  getFirstDayOfWeek(d) {
+    const newDate = this.clone(d);
     newDate.setDate(newDate.getDate() - newDate.getDay());
     return newDate;
   },
 
-  getTimeMode (d) {
+  getTimeMode(d) {
     return d.getHours() >= 12 ? 'pm' : 'am';
   },
 
-  getFullMonth (d) {
+  getFullMonth(d) {
     const month = d.getMonth();
     switch (month) {
       default: return 'Unknown';
@@ -44,7 +44,7 @@ module.exports = {
     }
   },
 
-  getShortMonth (d) {
+  getShortMonth(d) {
     const month = d.getMonth();
     switch (month) {
       default: return 'Unknown';
@@ -63,7 +63,7 @@ module.exports = {
     }
   },
 
-  getFullDayOfWeek (day) {
+  getFullDayOfWeek(day) {
     switch (day) {
       default: return 'Unknown';
       case 0: return 'Sunday';
@@ -76,7 +76,7 @@ module.exports = {
     }
   },
 
-  getShortDayOfWeek (day) {
+  getShortDayOfWeek(day) {
     switch (day) {
       default: return 'Unknown';
       case 0: return 'Sun';
@@ -89,70 +89,70 @@ module.exports = {
     }
   },
 
-  clone (d) {
+  clone(d) {
     return new Date(d.getTime());
   },
 
-  cloneAsDate (d) {
+  cloneAsDate(d) {
     const clonedDate = this.clone(d);
     clonedDate.setHours(0, 0, 0, 0);
     return clonedDate;
   },
 
-  isDateObject (d) {
+  isDateObject(d) {
     return d instanceof Date;
   },
 
-  addDays (d, days) {
+  addDays(d, days) {
     const newDate = this.clone(d);
     newDate.setDate(d.getDate() + days);
     return newDate;
   },
 
-  addWeeks (d, weeks) {
+  addWeeks(d, weeks) {
     const newDate = this.clone(d);
     newDate.setDate(newDate.getDate() + weeks * 7);
     return newDate;
   },
 
-  addMonths (d, months) {
+  addMonths(d, months) {
     const newDate = this.clone(d);
     newDate.setDate(1); // first
     newDate.setMonth(d.getMonth() + months);
     return newDate;
   },
 
-  addYears (d, years) {
+  addYears(d, years) {
     const newDate = this.clone(d);
     newDate.setFullYear(d.getFullYear() + years);
     return newDate;
   },
 
-  setDay (d, day) {
+  setDay(d, day) {
     const newDate = this.clone(d);
     newDate.setDate(day);
     return newDate;
   },
 
-  setMonth (d, month) {
+  setMonth(d, month) {
     const newDate = this.clone(d);
     newDate.setMonth(month);
     return newDate;
   },
 
-  setYear (d, year) {
+  setYear(d, year) {
     const newDate = this.clone(d);
     newDate.setFullYear(year);
     return newDate;
   },
 
-  setHours (d, hours) {
+  setHours(d, hours) {
     const newDate = this.clone(d);
     newDate.setHours(hours);
     return newDate;
   },
 
-  setMinutes (d, minutes) {
+  setMinutes(d, minutes) {
     const newDate = this.clone(d);
     newDate.setMinutes(minutes);
     return newDate;
@@ -163,26 +163,26 @@ module.exports = {
   },
 
   daysBetween(a, b) {
-    return Math.floor((a - b) / 86400000)
+    return Math.floor((a - b) / 86400000);
   },
 
-  areSameDay (a, b) {
+  areSameDay(a, b) {
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
   },
 
-  areSameWeek (a, b) {
+  areSameWeek(a, b) {
     // check within 7 days
     if (this.daysBetween(a, b) < 7) {
       a = this.clone(a);
       a.setDate(a.getDate() - a.getDay()); // first day of week
       b = this.clone(b);
       b.setDate(b.getDate() - b.getDay()); // first day of week
-      return a.getDate() == b.getDate();
+      return a.getDate() === b.getDate();
     }
     return false;
   },
 
-  toggleTimeMode (d) {
+  toggleTimeMode(d) {
     const newDate = this.clone(d);
     const hours = newDate.getHours();
 
@@ -190,7 +190,7 @@ module.exports = {
     return newDate;
   },
 
-  formatTime (date, format) {
+  formatTime(date, format) {
     let hours = date.getHours();
     let mins = date.getMinutes().toString();
 
@@ -200,15 +200,15 @@ module.exports = {
 
       hours = hours % 12;
       hours = (hours || 12).toString();
-      if (mins.length < 2) mins = '0' + mins;
+      if (mins.length < 2) mins = `0${mins}`;
 
-      return hours + ':' + mins + additional;
+      return `${hours}:${mins}${additional}`;
     }
 
     hours = hours.toString();
-    if (hours.length < 2) hours = '0' + hours;
-    if (mins.length < 2) mins = '0' + mins;
-    return hours + ':' + mins;
+    if (hours.length < 2) hours = `0${hours}`;
+    if (mins.length < 2) mins = `0${mins}`;
+    return `${hours}:${mins}`;
   }
 
 };

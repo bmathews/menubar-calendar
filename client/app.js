@@ -1,93 +1,100 @@
 import {
   ipcRenderer as ipc,
   shell
-} from 'electron'
+} from 'electron';
 
-var React = require('react');
-var Icon = require('./components/icon');
-var Calendar = require('./components/calendar/calendar');
-var EventList = require('./components/event-list');
+import React from 'react';
+import Icon from './components/icon';
+import Calendar from './components/calendar/calendar';
+import EventList from './components/event-list';
 
-export default React.createClass({
+class App extends React.Component {
 
-  getInitialState () {
-    return {
-      events: [],
-      view: 'month'
-    };
-  },
+  state = {
+    events: [],
+    view: 'month'
+  }
 
-  componentDidMount () {
+  componentDidMount() {
     ipc.on('events.synced', this._updateEvents);
     ipc.on('app.after-show', this._resetDate);
-  },
+  }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     ipc.off('events.synced', this._updateEvents);
     ipc.off('app.after-show', this._resetDate);
-  },
-
+  }
 
   /*
    * Fired when sync service has updated
    */
 
-  _updateEvents (sender, events) {
-    this.setState({ events: events});
-  },
-
+  _updateEvents = (sender, events) => {
+    this.setState({ events });
+  }
 
   /*
    * Fired when app is shown - set date to today
    */
 
-  _resetDate () {
+  _resetDate = () => {
     this.refs.calendar.changeDate();
-  },
-
+  }
 
   /*
    * When a date is selected, tell the eventList to scroll to it
    */
 
-  _handleCalendarSelect (date) {
-    var el = this.refs.eventlist;
+  _handleCalendarSelect = (date) => {
+    const el = this.refs.eventlist;
     el.scrollToDate(date);
-  },
-
+  }
 
   /*
    * When a header is clicked, select the date
    */
 
-  _handleHeaderClick (date) {
+  _handleHeaderClick = (date) => {
     this.refs.calendar.changeDate(date, true);
-  },
-
+  }
 
   /*
    * When an event is clicked, open in browser
    */
 
-  _handleEventClick (event) {
+  _handleEventClick = (event) => {
     this.refs.calendar.changeDate(new Date(event.start.dateTime), true);
     shell.openExternal(event.htmlLink);
-  },
-
+  }
 
   /*
    * Render
    */
 
-  render () {
+  render() {
     return (
       <div className="flex-column">
         <div className="menu-icon">
-          <Icon icon="menu"/>
+          <Icon icon="menu" />
         </div>
-        <Calendar ref="calendar" key="calendar" view={this.state.view} events={this.state.events} selectedDate={new Date()} onChange={this._handleCalendarSelect}/>
-        <EventList ref="eventlist" key="events" onHeaderClick={this._handleHeaderClick} onEventClick={this._handleEventClick} events={this.state.events}/>
+        <Calendar
+          ref="calendar"
+          key="calendar"
+          view={this.state.view}
+          events={this.state.events}
+          selectedDate={new Date()}
+          onChange={this._handleCalendarSelect}
+        />
+        <EventList
+          ref="eventlist"
+          key="events"
+          onHeaderClick={this._handleHeaderClick}
+          onEventClick={this._handleEventClick}
+          events={this.state.events}
+        />
       </div>
     );
   }
-});
+}
+
+export default App;

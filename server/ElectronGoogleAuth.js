@@ -1,7 +1,5 @@
 // Adapted from https://github.com/parro-it/electron-google-oauth
 import google from 'googleapis';
-import { stringify } from 'querystring';
-import fetch from 'node-fetch';
 const GoogleOAuth2 = google.auth.OAuth2;
 
 export default class Auth {
@@ -16,7 +14,7 @@ export default class Auth {
    * @param {array}  opts.scopes - Array of oAuth scope strings
    */
 
-  constructor (opts) {
+  constructor(opts) {
     this.opts = opts;
     this.client = new GoogleOAuth2(opts.clientId, opts.clientSecret, 'urn:ietf:wg:oauth:2.0:oob');
   }
@@ -26,17 +24,17 @@ export default class Auth {
    * Open a window and get the oAuth tokens.
    */
 
-  async auth (BrowserWindow) {
-    console.log("ElectronGoogleAuth: #auth: Getting auth")
+  async auth(BrowserWindow) {
+    console.log('ElectronGoogleAuth: #auth: Getting auth');
 
     const authorizationCode = await this._getAuthorizationCode(BrowserWindow);
 
-    return new Promise((resolve, reject) => {
-      return this.client.getToken(authorizationCode, (err, tokens) => {
-        this.client.setCredentials(tokens)
-        resolve(tokens)
+    return new Promise((resolve) => (
+      this.client.getToken(authorizationCode, (err, tokens) => {
+        this.client.setCredentials(tokens);
+        resolve(tokens);
       })
-    })
+    ));
   }
 
 
@@ -44,7 +42,7 @@ export default class Auth {
    * Open a browser window and get the oAuth code.
    */
 
-  _getAuthorizationCode (BrowserWindow) {
+  _getAuthorizationCode(BrowserWindow) {
     return new Promise((resolve, reject) => {
       const url = this.client.generateAuthUrl({
         access_type: 'offline',

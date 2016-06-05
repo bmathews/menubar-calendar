@@ -1,16 +1,16 @@
-import menubar from 'menubar'
-import { BrowserWindow, ipcMain as ipc } from 'electron'
+import menubar from 'menubar';
+import { BrowserWindow, ipcMain as ipc } from 'electron';
 
-import Configstore from 'configstore'
-import secrets from '../secrets.json'
-import SyncService from './SyncService'
+import Configstore from 'configstore';
+import secrets from '../secrets.json';
+import SyncService from './SyncService';
 
 const conf = new Configstore('menu-calendar');
 
-import ElectronGoogleAuth from './ElectronGoogleAuth'
+import ElectronGoogleAuth from './ElectronGoogleAuth';
 
-var oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
-  scopes: ["profile", "email", "https://www.googleapis.com/auth/calendar.readonly"]
+const oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
+  scopes: ['profile', 'email', 'https://www.googleapis.com/auth/calendar.readonly']
 }));
 
 // conf.clear();
@@ -19,10 +19,10 @@ var oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
  * Start up the menubar app
  */
 
-var mb = menubar({
+const mb = menubar({
   'always-on-top': process.env.NODE_ENV === 'development',
-  'transparent': true,
-  'dir': 'client/',
+  transparent: true,
+  dir: 'client/',
   preloadWindow: true,
   height: 650,
   width: 320
@@ -35,14 +35,14 @@ var mb = menubar({
  *   A new token from a new oauth browser window
  */
 
-var getToken = async function () {
-  var token = conf.get('auth');
+const getToken = async () => {
+  const token = conf.get('auth');
   if (token) {
     return token;
   }
 
-  var result = await oauth.auth(BrowserWindow)
-  conf.set("auth", result);
+  const result = await oauth.auth(BrowserWindow);
+  conf.set('auth', result);
   return result;
 };
 
@@ -51,16 +51,16 @@ var getToken = async function () {
  * Start syncing
  */
 
-var start = async function () {
+const start = async () => {
   try {
-    var token = await getToken();
+    const token = await getToken();
     oauth.client.setCredentials(token);
 
-    let sync = new SyncService();
+    const sync = new SyncService();
     sync.setAuth(oauth);
     sync.start();
 
-    sync.on('update', function (events) {
+    sync.on('update', (events) => {
       if (mb.window) {
         mb.window.webContents.send('events.synced', events);
       }
@@ -76,9 +76,9 @@ var start = async function () {
  * Emit an 'auth.change' event.
  */
 
-ipc.on('auth.get', async function (event) {
+ipc.on('auth.get', async (event) => {
   try {
-    var token = await getToken()
+    const token = await getToken();
     event.sender.send('auth.change', null, token);
   } catch (e) {
     event.sender.send('auth.change', e.stack, null);
@@ -91,8 +91,8 @@ if (process.env.NODE_ENV === 'development') {
   * Open dev tools after window is shown
   */
 
-  mb.on('after-show', function () {
-    mb.window.openDevTools({ detach: true })
+  mb.on('after-show', () => {
+    mb.window.openDevTools({ detach: true });
   });
 }
 
@@ -100,17 +100,18 @@ if (process.env.NODE_ENV === 'development') {
 /*
  * Notify app when shown
  */
- mb.on('after-show', function () {
-   if (mb.window) {
-     mb.window.webContents.send('app.after-show');
-   }
- });
+
+mb.on('after-show', () => {
+  if (mb.window) {
+    mb.window.webContents.send('app.after-show');
+  }
+});
 
 
 /*
  * Log when the app is ready.
  */
 
-mb.on('ready', function () {
+mb.on('ready', () => {
   start();
 });

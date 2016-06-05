@@ -1,3 +1,3 @@
-var Configstore = require('configstore');
-var conf = new Configstore('menu-calendar');
+import Configstore from 'configstore';
+const conf = new Configstore('menu-calendar');
 conf.set('auth', null);

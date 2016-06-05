@@ -1,2 +1,2 @@
-var rimraf = require('rimraf')
-rimraf.sync('events.db', {})
+import rimraf from 'rimraf';
+rimraf.sync('events.db', {});
