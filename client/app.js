@@ -30,7 +30,13 @@ class App extends React.Component {
    */
 
   _updateEvents = (sender, events) => {
-    this.setState({ events });
+    this.setState({ events: events.sort((a, b) => {
+      const aStart = a.start.dateTime || a.start.date;
+      const bStart = b.start.dateTime || b.start.date;
+      if (aStart < bStart) return -1;
+      if (aStart > bStart) return 1;
+      return 0;
+    }) });
   }
 
   /*

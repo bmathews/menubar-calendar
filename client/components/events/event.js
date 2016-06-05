@@ -18,7 +18,11 @@ class Event extends React.Component {
     const event = this.props.event;
     const start = new Date(event.start.dateTime || event.start.date);
     const end = new Date(event.end.dateTime || event.end.date);
-    const timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;
+    let timeRange = 'All day';
+    if (event.start.dateTime) {
+      timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;
+    }
+
     const now = new Date();
 
     const eventClasses = classNames({
