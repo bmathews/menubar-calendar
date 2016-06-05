@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import timeUtils from './timeUtils';
 
 class Day extends React.Component {
   static propTypes = {
@@ -19,7 +20,9 @@ class Day extends React.Component {
   _renderEventIndicator() {
     if (this.props.events.length) {
       const eventHours = this.props.events.reduce((total, e) => (
-        total + new Date(e.end.dateTime).getTime() - new Date(e.start.dateTime).getTime()
+        if (e.start.dateTime && e.end.dateTime) {
+          total + new Date(e.end.dateTime).getTime() - new Date(e.start.dateTime).getTime()
+        }
       ), 0) / 1000 / 60 / 60;
       const width = Math.min(eventHours / 8, 100);
       return (
@@ -37,11 +40,15 @@ class Day extends React.Component {
   }
 
   render() {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
     const dayClass = classNames({
       day: true,
       selected: this.props.selected,
       'different-month': this.props.isDifferentMonth,
-      past: this.props.date < new Date()
+      past: this.props.date < now,
+      today: timeUtils.areSameDay(this.props.date, now)
     });
 
     return (

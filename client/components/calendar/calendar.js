@@ -34,7 +34,7 @@ class Calendar extends React.Component {
 
     if (this.props.view === 'month') {
       const next = timeUtils.addMonths(this.state.viewDate, amount);
-      if (next.getMonth() === now.getMonth()) {
+      if (timeUtils.areSameMonth(now, next)) {
         this.changeDate(now);
       } else {
         this.changeDate(next);

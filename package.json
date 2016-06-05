@@ -40,7 +40,7 @@
     "start": "./node_modules/.bin/electron .",
     "clear-data": "node ./scripts/cleardb.js && node ./scripts/clearauth.js && node ./scripts/clearsynctokens.js",
     "test": "npm run lint",
-    "lint": "eslint **/*.js"
+    "lint": "eslint client server"
   },
   "author": "",
   "license": "ISC"

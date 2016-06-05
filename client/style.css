@@ -232,19 +232,14 @@ button, .button {
 
 .calendar .day.selected {
   color: #fff;
-  /*font-family: ".SFNSDisplay-Semibold", "Helvetica Neue", sans-serif;*/
-}
-
-.calendar .week:not(.names) .day:not(.today):not(.selected):hover:before {
-  background-color: rgba(0,0,0,.04);
 }
 
 .calendar .day.different-month {
   color: #bbb;
 }
 
-.calendar .day.today {
-  font-family: ".SFNSDisplay-Semibold", "Helvetica Neue", sans-serif;
+.calendar .day.today:not(.selected) {
+  color: #1E88E5;
 }
 
 .calendar .header {
@@ -362,17 +357,22 @@ button, .button {
 }
 
 .event {
-  cursor: pointer;
   display: flex;
   justify-content: space-between;
-  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.event.empty {
+  color: rgba(255,255,255,.3);
+  text-align: center;
+  display: block;
 }
 
 .event.current, .event.current .time {
   color: #FF8A65;
 }
 
-.event:hover {
+.event:not(.empty):hover {
+  cursor: pointer;
   background-color: rgba(255,255,255,.05);
 }
 

@@ -170,6 +170,10 @@ module.exports = {
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
   },
 
+  areSameMonth(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+  },
+
   areSameWeek(a, b) {
     // check within 7 days
     if (this.daysBetween(a, b) < 7) {
@@ -209,6 +213,20 @@ module.exports = {
     if (hours.length < 2) hours = `0${hours}`;
     if (mins.length < 2) mins = `0${mins}`;
     return `${hours}:${mins}`;
-  }
+  },
 
+  prettyFormatDate(date) {
+    const now = new Date();
+
+    let prefix = this.getFullDayOfWeek(date.getDay());
+    if (date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth()) {
+      if (date.getDate() === now.getDate()) {
+        prefix = 'Today';
+      } else if (date.getDate() - 1 === now.getDate()) {
+        prefix = 'Tomorrow';
+      }
+    }
+
+    return `${prefix} ${date.getMonth() + 1}/${date.getDate()}/${String(date.getFullYear()).substr(2)}`;
+  }
 };

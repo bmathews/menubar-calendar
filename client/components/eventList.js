@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import timeUtils from './calendar/timeUtils';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -32,13 +31,7 @@ class EventList extends React.Component {
    */
 
   _getGroupForDate(date) {
-    return moment(date).calendar(null, {
-      lastDay: 'dddd MM/DD/YY',
-      lastWeek: 'dddd MM/DD/YY',
-      sameDay: '[Today] MM/DD/YY',
-      nextDay: '[Tomorrow] MM/DD/YY',
-      nextWeek: 'dddd MM/DD/YY'
-    });
+    return timeUtils.prettyFormatDate(date);
   }
 
 
@@ -47,9 +40,40 @@ class EventList extends React.Component {
    */
 
   _groupEvents(events) {
-    return _.groupBy(events, (e) => (
-      this._getGroupForDate(e.start.dateTime || e.start.date)
-    ));
+    const groups = {};
+    const now = new Date();
+
+
+    // if no events, return only an empty today
+    if (!events.length) {
+      return {
+        [this._getGroupForDate(now)]: []
+      };
+    }
+
+    let last = now;
+    events.forEach(e => {
+      const d = new Date(e.start.dateTime || e.start.date);
+      d.setHours(0, 0, 0, 0);
+
+      const format = this._getGroupForDate(d);
+
+      // there's no events for today, so create one
+      if (last < now && d > now) {
+        groups[this._getGroupForDate(now)] = [];
+      }
+
+      if (!groups[format]) {
+        groups[format] = [e];
+      } else {
+        groups[format].push(e);
+      }
+
+
+      last = d;
+    });
+
+    return groups;
   }
 
 
@@ -137,8 +161,8 @@ class EventList extends React.Component {
 
   _renderEvent(event, idx) {
     let name = event.summary;
-    const start = new Date(event.start.dateTime);
-    const end = new Date(event.end.dateTime);
+    const start = new Date(event.start.dateTime || event.start.date);
+    const end = new Date(event.end.dateTime || event.start.date);
     let timeRange = `${timeUtils.formatTime(start, 'ampm')} - ${timeUtils.formatTime(end, 'ampm')}`;
     const now = new Date();
     const isPast = end < now;
@@ -176,6 +200,12 @@ class EventList extends React.Component {
       const els = subItems.map((e, i) => (
         this._renderEvent(e, i)
       ));
+
+      if (!els.length && key.indexOf('Today') === 0) {
+        els.push(
+          <div className="event empty">No events today!</div>
+        );
+      }
       return [header].concat(els);
     });
 

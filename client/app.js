@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import Icon from './components/icon';
 import Calendar from './components/calendar/calendar';
-import EventList from './components/event-list';
+import EventList from './components/eventList';
 
 class App extends React.Component {
 
@@ -63,7 +63,7 @@ class App extends React.Component {
    */
 
   _handleEventClick = (event) => {
-    this.refs.calendar.changeDate(new Date(event.start.dateTime), true);
+    this.refs.calendar.changeDate(new Date(event.start.dateTime || event.start.date), true);
     shell.openExternal(event.htmlLink);
   }
 
