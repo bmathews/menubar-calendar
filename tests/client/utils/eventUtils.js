@@ -2,7 +2,7 @@ import test from 'tape';
 import eventUtils from '../../../client/utils/eventUtils';
 
 test('getEventsForDay', (t) => {
-  t.plan(6);
+  t.plan(5);
 
   const e1 = {
     start: { date: '2016-06-06' },
@@ -22,10 +22,8 @@ test('getEventsForDay', (t) => {
   let result = eventUtils.getEventsForDay(new Date(2016, 5, 6), [e1, e2]);
   t.same(result, [e1]);
   result = eventUtils.getEventsForDay(new Date(2016, 5, 7), [e1, e2]);
-  t.same(result, [e1, e2]);
-  result = eventUtils.getEventsForDay(new Date(2016, 5, 8), [e1, e2]);
   t.same(result, [e2]);
-  result = eventUtils.getEventsForDay(new Date(2016, 5, 9), [e1, e2]);
+  result = eventUtils.getEventsForDay(new Date(2016, 5, 8), [e1, e2]);
   t.same(result, []);
   result = eventUtils.getEventsForDay(new Date(2016, 5, 8), [e3]);
   t.same(result, [e3]);
@@ -40,7 +38,7 @@ test('getEventsForDay', (t) => {
 });
 
 test('getDatesForEvent', (t) => {
-  t.plan(3);
+  t.plan(2);
 
   const e1 = {
     start: { date: '2016-06-07' },
@@ -50,8 +48,7 @@ test('getDatesForEvent', (t) => {
   let result = eventUtils.getDatesForEvent(e1).map(d => d.getTime());
   t.same(result, [
     new Date(2016, 5, 7).getTime(),
-    new Date(2016, 5, 8).getTime(),
-    new Date(2016, 5, 9).getTime()
+    new Date(2016, 5, 8).getTime()
   ]);
 
   const e2 = {
@@ -60,17 +57,6 @@ test('getDatesForEvent', (t) => {
   };
 
   result = eventUtils.getDatesForEvent(e2).map(d => d.getTime());
-  t.same(result, [
-    new Date(2016, 5, 7).getTime(),
-    new Date(2016, 5, 8).getTime()
-  ]);
-
-  const e3 = {
-    start: { date: '2016-06-07' },
-    end: { date: '2016-06-07' }
-  };
-
-  result = eventUtils.getDatesForEvent(e3).map(d => d.getTime());
   t.same(result, [
     new Date(2016, 5, 7).getTime()
   ]);
@@ -89,15 +75,22 @@ test('getEventStartDate', (t) => {
 });
 
 test('getEventEndDate', (t) => {
-  t.plan(1);
+  t.plan(2);
   const e = {
     start: { date: '2016-06-06' },
     end: { date: '2016-06-07' }
   };
 
-  const expected = new Date(2016, 5, 7);
+  const expected = new Date(2016, 5, 6);
   const result = eventUtils.getEventEndDate(e);
   t.equal(expected.getTime(), result.getTime());
+
+  const e2 = {
+    start: { dateTime: '2016-06-06T20:00:00Z' },
+    end: { dateTime: '2016-06-06T20:00:00Z' }
+  };
+
+  t.equal(new Date('2016-06-06T20:00:00Z').getTime(), eventUtils.getEventEndDate(e2).getTime());
 });
 
 test('groupEventsByDate', (t) => {
@@ -109,7 +102,6 @@ test('groupEventsByDate', (t) => {
   const result = eventUtils.groupEventsByDate([e1], new Date(2016, 5, 7));
   t.same({
     'Monday 6/6/16': [e1],
-    'Today 6/7/16': [e1],
-    'Tomorrow 6/8/16': [e1]
+    'Today 6/7/16': [e1]
   }, result);
 });
