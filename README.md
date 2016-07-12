@@ -37,6 +37,16 @@ Open dev tools when app is started with:
 $ npm run dev
 ```
 
+Run tests with:
+```
+npm test
+```
+
+Lint with:
+```
+npm run lint
+```
+
 Clear out your local database with:
 ```
 $ npm run clear-data
