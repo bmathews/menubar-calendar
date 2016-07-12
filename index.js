@@ -1,5 +1,4 @@
-require('babel/register')({
-  sourceMaps: 'inline',
-  optional: ["es7.classProperties"]
+require('babel-register')({
+  sourceMaps: true
 });
-require('./server/server.js')
+require('./server/server.js');

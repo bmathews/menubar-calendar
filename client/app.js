@@ -7,7 +7,7 @@ import React from 'react';
 import Icon from './components/icon';
 import Calendar from './components/calendar/calendar';
 import EventList from './components/events/eventList';
-import eventUtils from './components/calendar/eventUtils';
+import eventUtils from './utils/eventUtils';
 
 class App extends React.Component {
 

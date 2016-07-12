@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import timeUtils from './timeUtils';
+import timeUtils from '../../utils/timeUtils';
+import eventUtils from '../../utils/eventUtils';
 
 class Day extends React.Component {
   static propTypes = {
@@ -19,13 +20,10 @@ class Day extends React.Component {
 
   _renderEventIndicator() {
     if (this.props.events.length) {
-      const eventHours = this.props.events.reduce((total, e) => {
-        if (e.start.dateTime) {
-          return total + new Date(e.end.dateTime).getTime() - new Date(e.start.dateTime).getTime();
-        }
-        return 1;
-      }, 0) / 1000 / 60 / 60;
-      const width = Math.min(eventHours / 8, 100);
+      const eventHours = this.props.events.reduce((total, e) => (
+        total + eventUtils.getHoursForEventOnDate(e, this.props.date)
+      ), 0);
+      const width = Math.min(eventHours / 8, 1);
       return (
         <span className="dot" style={{ width: `${width * 100}%` }}></span>
       );

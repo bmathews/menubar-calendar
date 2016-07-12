@@ -1,6 +1,6 @@
 import React from 'react';
-import timeUtils from '../calendar/timeUtils';
-import eventUtils from '../calendar/eventUtils';
+import timeUtils from '../../utils/timeUtils';
+import eventUtils from '../../utils/eventUtils';
 import Event from './event';
 import _ from 'lodash';
 
@@ -17,7 +17,7 @@ class EventList extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.state.groupedEvents = this._groupEvents(nextProps.events);
+    this.state.groupedEvents = eventUtils.groupEventsByDate(nextProps.events);
   }
 
   componentWillUnmount() {
@@ -33,48 +33,6 @@ class EventList extends React.Component {
 
   _getGroupForDate(date) {
     return timeUtils.prettyFormatDate(date);
-  }
-
-
-  /*
-   * Group events by date
-   */
-
-  _groupEvents(events) {
-    const groups = {};
-    const now = new Date();
-
-
-    // if no events, return only an empty today
-    if (!events.length) {
-      return {
-        [this._getGroupForDate(now)]: []
-      };
-    }
-
-    let last = now;
-    events.forEach(e => {
-      const dates = eventUtils.getDatesForEvent(e);
-
-      dates.forEach(d => {
-        const format = this._getGroupForDate(d);
-
-        // there're no events for today, so create one
-        if (last < now && d > now) {
-          groups[this._getGroupForDate(now)] = [];
-        }
-
-        if (!groups[format]) {
-          groups[format] = [e];
-        } else {
-          groups[format].push(e);
-        }
-
-        last = d;
-      });
-    });
-
-    return groups;
   }
 
 
@@ -143,6 +101,10 @@ class EventList extends React.Component {
     }
   }
 
+  _getDateFomGroup(group) {
+    return new Date(group.substr(group.indexOf(' ') + 1));
+  }
+
 
   /*
    * Handle when a group header is clicked on
@@ -151,7 +113,7 @@ class EventList extends React.Component {
   _handleHeaderClick = (e) => {
     const group = e.currentTarget.innerText;
     if (this.props.onHeaderClick) {
-      const d = new Date(group.substr(group.indexOf(' ') + 1));
+      const d = this._getDateFomGroup(group);
       this.props.onHeaderClick(d);
     }
   }
@@ -161,8 +123,8 @@ class EventList extends React.Component {
    * Render the individual event item
    */
 
-  _renderEvent = (event, idx) => (
-    <Event event={event} key={idx} onClick={this._handleEventClick} />
+  _renderEvent = (event, idx, group) => (
+    <Event event={event} key={idx} date={this._getDateFomGroup(group)} onClick={this._handleEventClick} />
   )
 
 
@@ -175,7 +137,9 @@ class EventList extends React.Component {
       const header = (
         <div ref={key} className="event-list-header" onMouseDown={this._handleHeaderClick}>{key}</div>
       );
-      const els = subItems.map(this._renderEvent);
+      const els = subItems.map((e, i) => (
+        this._renderEvent(e, i, key)
+      ));
 
       if (!els.length && key.indexOf('Today') === 0) {
         els.push(

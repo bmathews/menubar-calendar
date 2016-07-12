@@ -2,8 +2,8 @@ import React from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import Day from './day';
 import Icon from '../icon';
-import timeUtils from './timeUtils';
-import eventUtils from './eventUtils';
+import timeUtils from '../../utils/timeUtils';
+import eventUtils from '../../utils/eventUtils';
 
 class Calendar extends React.Component {
 

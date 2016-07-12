@@ -4,6 +4,7 @@
 
 html {
   overflow: hidden;
+  overflow-y: overlay;
 }
 
 body, html {
@@ -284,8 +285,8 @@ button, .button {
 
 .calendar .dots {
   text-align: center;
+  width: 65%;
   height: 4px;
-  width: 100%;
 }
 
 

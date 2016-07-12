@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
   getDaysInMonth(d) {
     const resultDate = this.getFirstDayOfMonth(d);
@@ -215,14 +215,12 @@ module.exports = {
     return `${hours}:${mins}`;
   },
 
-  prettyFormatDate(date) {
-    const now = new Date();
-
+  prettyFormatDate(date, today = new Date()) {
     let prefix = this.getFullDayOfWeek(date.getDay());
-    if (date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth()) {
-      if (date.getDate() === now.getDate()) {
+    if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth()) {
+      if (date.getDate() === today.getDate()) {
         prefix = 'Today';
-      } else if (date.getDate() - 1 === now.getDate()) {
+      } else if (date.getDate() - 1 === today.getDate()) {
         prefix = 'Tomorrow';
       }
     }
