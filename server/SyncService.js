@@ -17,14 +17,10 @@ export default class extends EventEmitter {
   }
 
   async sync() {
-    try {
-      const { syncTokens, items } = await api.syncEvents(conf.get('syncTokens') || {});
-      conf.set('syncTokens', syncTokens);
-      await store.removeItems(items.remove);
-      await store.setItems(items.save);  
-    } catch (e) {
-
-    }
+    const { syncTokens, items } = await api.syncEvents(conf.get('syncTokens') || {});
+    conf.set('syncTokens', syncTokens);
+    await store.removeItems(items.remove);
+    await store.setItems(items.save);
   }
 
   async getEvents() {
@@ -48,12 +44,11 @@ export default class extends EventEmitter {
     try {
       console.log('Sync: #tick: Starting');
 
-      await this.sync()
+      await this.sync();
 
       console.log('Sync: #tick: Synced and updated store');
 
       await this.getEvents();
-
     } catch (e) {
       console.error(e, e.stack);
     }

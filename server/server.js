@@ -66,7 +66,6 @@ const start = async () => {
 
     sync.setAuth(oauth);
     await sync.start();
-
   } catch (e) {
     console.error(e, e.stack);
   }
