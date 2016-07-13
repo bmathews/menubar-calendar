@@ -7,7 +7,7 @@ import SyncService from './SyncService';
 
 const conf = new Configstore('menu-calendar');
 
-import ElectronGoogleAuth from './ElectronGoogleAuth';
+import ElectronGoogleAuth from './oauth/ElectronGoogleAuth';
 
 const oauth = new ElectronGoogleAuth(Object.assign({}, secrets.oauth, {
   scopes: ['profile', 'email', 'https://www.googleapis.com/auth/calendar.readonly']
@@ -57,14 +57,16 @@ const start = async () => {
     oauth.client.setCredentials(token);
 
     const sync = new SyncService();
-    sync.setAuth(oauth);
-    sync.start();
 
     sync.on('update', (events) => {
       if (mb.window) {
         mb.window.webContents.send('events.synced', events);
       }
     });
+
+    sync.setAuth(oauth);
+    await sync.start();
+
   } catch (e) {
     console.error(e, e.stack);
   }
@@ -86,11 +88,11 @@ ipc.on('auth.get', async (event) => {
 });
 
 
-if (process.env.NODE_ENV === 'development') {
-  /*
-  * Open dev tools after window is shown
-  */
+/*
+ * Open dev tools after window is shown
+ */
 
+if (process.env.NODE_ENV === 'development') {
   mb.on('after-show', () => {
     mb.window.openDevTools({ detach: true });
   });
@@ -109,9 +111,9 @@ mb.on('after-show', () => {
 
 
 /*
- * Log when the app is ready.
+ * When menubar is ready, start syncing
  */
 
-mb.on('ready', () => {
-  start();
+mb.on('ready', async () => {
+  await start();
 });

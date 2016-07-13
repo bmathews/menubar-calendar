@@ -13,7 +13,7 @@ class EventList extends React.Component {
   }
 
   state = {
-    groupedEvents: {}
+    groupedEvents: new Map()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -101,7 +101,7 @@ class EventList extends React.Component {
     }
   }
 
-  _getDateFomGroup(group) {
+  _getDateFromGroup(group) {
     return new Date(group.substr(group.indexOf(' ') + 1));
   }
 
@@ -113,7 +113,7 @@ class EventList extends React.Component {
   _handleHeaderClick = (e) => {
     const group = e.currentTarget.innerText;
     if (this.props.onHeaderClick) {
-      const d = this._getDateFomGroup(group);
+      const d = this._getDateFromGroup(group);
       this.props.onHeaderClick(d);
     }
   }
@@ -124,7 +124,7 @@ class EventList extends React.Component {
    */
 
   _renderEvent = (event, idx, group) => (
-    <Event event={event} key={idx} date={this._getDateFomGroup(group)} onClick={this._handleEventClick} />
+    <Event event={event} key={idx} date={this._getDateFromGroup(group)} onClick={this._handleEventClick} />
   )
 
 

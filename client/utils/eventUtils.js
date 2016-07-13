@@ -42,7 +42,7 @@ export default {
       return new Date(e.end.dateTime);
     }
     const split = e.end.date.split('-');
-    // minus 1 on day, all-day events end.date is exclusive
+    // minus 1 on all-day events end.date is exclusive
     return new Date(split[0], split[1] - 1, split[2] - 1);
   },
 
@@ -71,40 +71,32 @@ export default {
   },
 
   groupEventsByDate(events, today = new Date()) {
-    const groups = {};
+    const todayFormat = today.toISOString().substr(0, 10);
+    const groups = {
+      [todayFormat]: []
+    };
 
-    // if no events, return only an empty today
-    if (!events.length) {
-      return {
-        [timeUtils.prettyFormatDate(today, today)]: []
-      };
-    }
-
-    let last = today;
-    let todayCreated = false;
     events.forEach(e => {
       const dates = this.getDatesForEvent(e);
 
       dates.forEach(d => {
-        const format = timeUtils.prettyFormatDate(d, today);
-
-        // there're no events for today, so create one
-        if (last < today && d > today && !todayCreated) {
-          groups[timeUtils.prettyFormatDate(today, today)] = [];
-          todayCreated = true;
-        }
-
+        const format = d.toISOString().substr(0, 10);
         if (!groups[format]) {
           groups[format] = [e];
         } else {
           groups[format].push(e);
         }
-
-        last = d;
       });
     });
 
-    return groups;
+    const sortedGroups = {};
+    let keys = Object.keys(groups);
+    keys = keys.sort();
+    for (const k of keys) {
+      const split = k.split('-');
+      sortedGroups[timeUtils.prettyFormatDate(new Date(split[0], split[1] - 1, split[2]), today)] = groups[k];
+    }
+    return sortedGroups;
   }
 
 };

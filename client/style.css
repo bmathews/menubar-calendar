@@ -314,6 +314,7 @@ button, .button {
   color: #fff;
   flex: 1;
   overflow-y: overlay;
+  overflow-x: hidden;
   -webkit-font-smoothing: initial;
   border-radius: 0 0 3px 3px;
 }

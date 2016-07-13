@@ -42,7 +42,7 @@ class Event extends React.Component {
     const eventClasses = classNames({
       event: true,
       past: end < now,
-      current: now >= start && now <= end
+      current: timeUtils.areSameDay(now, this.props.date) && now >= start && now <= end
     });
 
     return (
