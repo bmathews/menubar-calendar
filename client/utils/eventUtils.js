@@ -71,6 +71,7 @@ export default {
   },
 
   groupEventsByDate(events, today = new Date()) {
+    today.setHours(0, 0, 0, 0);
     const todayFormat = today.toISOString().substr(0, 10);
     const groups = {
       [todayFormat]: []
