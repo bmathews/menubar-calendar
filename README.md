@@ -1,12 +1,13 @@
+## WIP - Electron-powered Google calendar menubar app
+_Not ready for daily usage_
+
 <p align="center">
 <img src="https://i.imgur.com/nHDHmc1.gif" />
 </p>
 
-### Electron powered menubar calendar app
-
 ### Install
 
-With npm and node (v4.2.1+) installed, do:
+With npm and node (v6+) installed, do:
 
 ```
 $ npm install
