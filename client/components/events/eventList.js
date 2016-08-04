@@ -13,7 +13,7 @@ class EventList extends React.Component {
   }
 
   state = {
-    groupedEvents: new Map()
+    groupedEvents: {}
   }
 
   componentWillReceiveProps(nextProps) {

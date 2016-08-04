@@ -176,9 +176,9 @@ class Calendar extends React.Component {
             <Icon icon="chevron-right" />
           </div>
         </div>
+        <div className="days-of-week">{this._renderDaysOfWeek()}</div>
         <CSSTransitionGroup transitionName={animation} transitionEnterTimeout={200} transitionLeaveTimeout={200} component="div">
           <div className="calendar-slider" key={key}>
-            <div className="days-of-week">{this._renderDaysOfWeek()}</div>
             <div className="days">
               {this.props.view === 'month' ? this._renderMonthView() : this._renderWeekView()}
             </div>

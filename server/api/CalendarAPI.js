@@ -17,6 +17,19 @@ export default class CalendarAPI {
 
 
   /*
+   * Get a list of the user's calendars
+   */
+
+  async getCalendars() {
+    const resp = await Q.nfcall(gcal.calendarList.list, {
+      auth: this.oauth.client
+    });
+    const data = resp[0];
+    return data.items;
+  }
+
+
+  /*
    * Run the event sync process
    *  If we have a syncToken in storage, initial sync is done, so use it to fetch the changed items
    *  If we have a pageToken in storage, we're in the middle of a sync so grab the next page

@@ -43,7 +43,7 @@ body {
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 8px solid #1E88E5;
+  border-bottom: 8px solid #547DF9;
 }
 
 #react-root > .flex-column {
@@ -83,12 +83,12 @@ button:disabled, .button:disabled {
 }
 
 .menu-icon {
-  display: none;
   position: absolute;
   top: 28px;
   left: 15px;
   color: #fff;
-  z-index: 1;
+  z-index: 3;
+  display: none;
 }
 
 .content {
@@ -128,7 +128,9 @@ button, .button {
 
 .calendar {
   position: relative;
+  z-index: 2;
   overflow: hidden;
+  box-shadow: 0px 2px 4px rgba(0,0,0,.08);
 }
 
 .calendar--month {
@@ -145,12 +147,15 @@ button, .button {
 
 .calendar .days-of-week {
   display: flex;
+  background: #547DF9;
+  margin-bottom: 6px;
 }
+
 .calendar .days-of-week > span {
   flex: 0 0 calc(100% / 7);
   text-align: center;
-  color: #bbb;
-  line-height: 30px;
+  color: rgba(255,255,255,.4);
+  line-height: 36px;
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 600;
@@ -192,7 +197,7 @@ button, .button {
   bottom: 0;
   left: 50%;
   border-radius: 50%;
-  background-color: #FF8A65;
+  background-color: #547DF9;
   opacity: 0;
   transform: translate(-50%, -50%) scale(.75);
   transition: opacity 125ms ease-in-out, transform 125ms ease-in-out;;
@@ -226,7 +231,7 @@ button, .button {
 .calendar .day.selected:before {
   opacity: 1;
   border-radius: 50%;
-  background-color: #FF8A65;
+  background-color: #547DF9;
   transform: translate(-50%, -50%) scale(1);
   animation: bounceIn 250ms ease-in-out;
 }
@@ -240,13 +245,13 @@ button, .button {
 }
 
 .calendar .day.today:not(.selected) {
-  color: #1E88E5;
+  color: #547DF9;
 }
 
 .calendar .header {
-  background: #1E88E5;
+  background: #547DF9;
   color: #fff;
-  padding: 10px 10px 10px 15px;
+  padding: 10px 10px 0px 15px;
   display: flex;
   border-radius: 3px 3px 0 0;
 }
@@ -307,20 +312,18 @@ button, .button {
 
 .event-list {
   position: relative;
-  margin-top: 12px;
-  padding-top: 4px;
+  letter-spacing: .4;
   padding-bottom: 10px;
-  background-color: #263238;
-  color: #fff;
+  background-color: #F1F5F6;
+  color: #444;
   flex: 1;
   overflow-y: overlay;
   overflow-x: hidden;
-  -webkit-font-smoothing: initial;
   border-radius: 0 0 3px 3px;
 }
 
 .event-list::-webkit-scrollbar {
-  width:15px;
+  width: 4px;
   background: transparent;
   -webkit-appearance: none;
 }
@@ -338,67 +341,104 @@ button, .button {
   border: 4px solid transparent;
   background-clip: padding-box;
   border-radius: 5px;
-  background-color: rgba(255,255,255,0);
+  background-color: rgba(0,0,0,0);
   min-height: 30px;
 }
 
+.event .attendees {
+  flex: 1 0 100%;
+  padding-left: 12px;
+  padding-bottom: 10px;
+}
+
+.event .attendees .avatar {
+  background-size: cover;
+  background-position: center center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.event .attendees .avatar+.avatar {
+  margin-left: 4px;
+}
+
+.event .attendees .more {
+  vertical-align: middle;
+  margin-left: 4px;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  border: 1px solid #979797;
+  color: #999;
+  font-size: 11px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .event-list:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(255,255,255,0.3);
+  background-color: rgba(0,0,0,0.3);
 }
 
 .event-list::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255,255,255,0.4);
+  background-color: rgba(0,0,0,0.4);
 }
 
 .event-list-header {
   margin-top: 12px;
-  padding: 4px 17px;
-  color: rgba(255,255,255,.5);
-  font-family: ".SFNSDisplay-Regular", "Helvetica Neue", sans-serif;
+  padding: 4px 12px 0px 12px;
+  color: #888888;
+  font-family: ".SFNSDisplay-Medium", "Helvetica Neue", sans-serif;
   font-size: 12px;
 }
 
 .event {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 1px 2px rgba(0,0,0,.1);
+  margin: 8px 8px 4px 8px;
+  font-family: ".SFNSDisplay-Medium", "Helvetica Neue", sans-serif;
 }
 
 .event.empty {
-  color: rgba(255,255,255,.3);
   text-align: center;
   display: block;
+  background: none;
+  box-shadow: none;
+  padding: 6px;
 }
 
 .event.current, .event.current .time {
-  color: #FF8A65;
+  color: #547DF9;
 }
 
 .event:not(.empty):hover {
   cursor: pointer;
-  background-color: rgba(255,255,255,.05);
 }
 
 .event .name, .event .time {
-  padding: 6px 17px;
+  padding: 10px 14px;
 }
 
 .event .name {
   flex: 1;
   align-items: center;
   padding-right: 0;
-}
-
-.event .time > span {
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  display: block;
+  text-overflow: ellipsis;
 }
 
 .event .location {
-  color: rgba(255,255,255,.3);
-  font-size: 12px;
-  margin-top: 3px;
+  color: #888;
+  font-size: 11px;
+  margin-top: 5px;
 }
 
 .event .location:empty {
@@ -406,16 +446,17 @@ button, .button {
 }
 
 .event.past .name {
-  color: rgba(255,255,255,.3);
+  color: #444444;
 }
 .event.past .time {
-  color: rgba(255,255,255,.3);
+  color: #888;
 }
 
 .event .time {
   font-size: 11px;
   text-align: right;
-  color: rgba(255,255,255,.5);
+  color: #888;
+  padding-top: 11.5px;
 }
 
 /* slide right animation */
@@ -500,4 +541,31 @@ button, .button {
 .slide-up-leave.slide-up-leave-active {
   opacity: 0;
   transform: translate3d(0, -100%, 0);
+}
+
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  display: block;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 250ms ease;
+  transform: translate(-50%, 10px);
+  left: 50%;
+  bottom: 100%;
+  background-color: rgba(0,0,0,.8);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 2px;
+  font-size: 11px;
+}
+
+[data-tooltip]:hover::before {
+  transform: translate(-50%, -10px);
+  opacity: 1;
+  pointer-events: auto;
 }

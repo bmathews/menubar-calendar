@@ -40,6 +40,10 @@ class App extends React.Component {
     }) });
   }
 
+  _handleMenuClick = () => {
+    this.setState({ view: this.state.view === 'month' ? 'week' : 'month' });
+  }
+
   /*
    * Fired when app is shown - set date to today
    */
@@ -81,7 +85,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="flex-column">
-        <div className="menu-icon">
+        <div className="menu-icon" onClick={this._handleMenuClick}>
           <Icon icon="menu" />
         </div>
         <Calendar

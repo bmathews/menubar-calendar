@@ -2,6 +2,7 @@ import React from 'react';
 import timeUtils from '../../utils/timeUtils';
 import eventUtils from '../../utils/eventUtils';
 import classNames from 'classnames';
+import md5 from 'md5';
 
 class Event extends React.Component {
   static propTypes = {
@@ -26,6 +27,36 @@ class Event extends React.Component {
       return `Ends at ${timeUtils.formatTime(end, 'ampm')}`;
     }
     return 'All day';
+  }
+
+  _renderAttendees(attendees) {
+    console.log(attendees);
+    if (attendees) {
+      const filtered = attendees.filter(a => a.responseStatus === 'accepted');
+      const circles = filtered.slice(0, 3).map((a, i) => (
+        <div
+          className="avatar"
+          key={i}
+          style={{ backgroundImage: `url(https://www.gravatar.com/avatar/${md5(a.email.toLowerCase())}?d=mm)` }}
+        >
+        </div>
+      ));
+
+      let roundy;
+      if (filtered.length > 3) {
+        roundy = (
+          <div className="more">+{filtered.length - 3}</div>
+        );
+      }
+
+      return (
+        <div className="attendees">
+          {circles}
+          {roundy}
+        </div>
+      );
+    }
+    return null;
   }
 
   render() {
@@ -54,6 +85,7 @@ class Event extends React.Component {
           </div>
         </div>
         <div className="time">{timeRange}</div>
+        {this._renderAttendees(event.attendees)}
       </div>
     );
   }
